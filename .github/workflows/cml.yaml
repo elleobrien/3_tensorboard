@@ -17,6 +17,5 @@ jobs:
           pip3 install -r requirements.txt
           python train.py
           
-          echo "yes" | tensorboard dev upload --logdir logs >> report.md
-          cml-send-github-check report.md 
+          tensorboard dev upload --logdir logs
           
