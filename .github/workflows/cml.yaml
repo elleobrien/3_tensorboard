@@ -14,8 +14,9 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pip3 install -r requirements.txt
-          python train.py
+          #pip3 install -r requirements.txt
+          #python train.py
           
-          tensorboard dev upload --logdir logs
+          echo "View your TensorBoard live at: https://tensorboard.dev/experiment/PE6KpjZ1TOabSzGGDBWd9w/" >> report.md
+          cml-send-github-check report.md 
           
