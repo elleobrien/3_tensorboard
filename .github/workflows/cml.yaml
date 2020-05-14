@@ -19,6 +19,6 @@ jobs:
           python train.py
           
           tensorboard dev --help
-          echo yes | tensorboard dev upload --logdir logs
+          echo yes | tensorboard dev upload --logdir logs --auth_force_console
           #cml-send-github-check report.md 
           
