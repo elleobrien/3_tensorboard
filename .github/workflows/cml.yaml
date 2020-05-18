@@ -27,7 +27,7 @@ jobs:
           sleep 5 && \
           cat tb.log | grep http > report.md && \
           cml-send-comment report.md && \
-          python train.py > train.log 2>&1" tb.log
+          python train.py" tb.log
 
           cml-send-github-check report.md 
           
