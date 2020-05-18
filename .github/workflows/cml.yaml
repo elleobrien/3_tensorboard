@@ -26,7 +26,7 @@ jobs:
           PID=$!
           python train.py
           kill $PID
+          # sleep 5
           
-          sleep 5
           cml-send-github-check report.md 
           
