@@ -23,5 +23,6 @@ jobs:
           echo "$TENSORBOARD_CREDENTIALS" > ~/.config/tensorboard/credentials/uploader-creds.json
 
           python train.py & tensorboard dev upload --logdir logs
+          kill -INT 888
           #cml-send-github-check report.md 
           
