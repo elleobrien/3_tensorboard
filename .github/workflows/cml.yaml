@@ -27,6 +27,7 @@ jobs:
           sleep 5 && \
           cat tb.log && \
           cat tb.log | grep http > report.md && \
+          echo 'hi' >> report.md && \
           cml-send-comment report.md && \
           python train.py > train.log 2>&1" tb.log
 
