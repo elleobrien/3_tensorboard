@@ -27,6 +27,8 @@ jobs:
           python train.py &
           kill $PID
           
+          sleep 5
+          echo 'Report?'
           cat report.md
           cml-send-github-check report.md 
           
