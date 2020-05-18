@@ -29,5 +29,6 @@ jobs:
               cml-send-comment report.md && \
               python train.py" tb.log
 
+          sleep 120
           cml-send-github-check report.md
           
