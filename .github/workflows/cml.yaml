@@ -22,7 +22,7 @@ jobs:
           mkdir -p ~/.config/tensorboard/credentials/
           echo "$TENSORBOARD_CREDENTIALS" > ~/.config/tensorboard/credentials/uploader-creds.json
 
-          script -c -f "
+          script -c "
           tensorboard dev upload --logdir logs & \
           sleep 5 && \
           cat tb.log && \
