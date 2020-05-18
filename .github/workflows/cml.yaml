@@ -24,7 +24,7 @@ jobs:
 
           tensorboard dev upload --logdir logs > report.md 2>&1 &
           PID=$!
-          python train.py &
+          python train.py
           kill $PID
           
           sleep 5
