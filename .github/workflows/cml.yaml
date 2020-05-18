@@ -29,7 +29,7 @@ jobs:
               cml-send-comment report.md && \
               python train.py > train.log 2>&1" tb.log
 
-          echo 'bye' >> report.md && \
+          echo 'bye' >> report.md
           cml-send-comment report.md
           cml-send-github-check report.md 
           
