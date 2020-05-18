@@ -22,10 +22,11 @@ jobs:
           mkdir -p ~/.config/tensorboard/credentials/
           echo "$TENSORBOARD_CREDENTIALS" > ~/.config/tensorboard/credentials/uploader-creds.json
 
-          tensorboard dev upload --logdir logs > report.md 2>&1 &
-          PID=$!
-          python train.py
-          kill $PID
+          script -c "
+          tensorboard dev upload --logdir logs & \
+          sleep 5 && \
+          python train.py" tb.log
+          cat tb.log | grep http > report.md
 
           cml-send-github-check report.md 
           
