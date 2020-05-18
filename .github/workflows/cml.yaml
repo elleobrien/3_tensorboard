@@ -28,7 +28,7 @@ jobs:
           kill $PID
           
           sleep 5
-          echo 'Report?'
+          echo 'Report?' >> report.md
           cat report.md
           cml-send-github-check report.md 
           
