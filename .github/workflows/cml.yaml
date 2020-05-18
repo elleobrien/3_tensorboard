@@ -13,12 +13,13 @@ jobs:
       - name: dvc_cml_run
         shell: bash
         env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           pip3 install -r requirements.txt
           python train.py
           
-          tensorboard dev --help
-          echo yes | tensorboard dev upload --logdir logs --auth_force_console
+          echo "${{ secrets.TENSORBOARD_CREDENTIALS }}" > ~/.config/tensorboard/credentials/uploader-creds.json
+          python train.py & tensorboard dev upload --logdir logs
+          
           #cml-send-github-check report.md 
           
