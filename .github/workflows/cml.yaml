@@ -15,7 +15,8 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
-          echo "${{ secrets.TENSORBOARD_CREDENTIALS }}" 
+          echo "${{ secrets.TENSORBOARD_CREDENTIALS }}" > uploader-creds.json
+          cat uploader-creds.json
 
           #cml-send-github-check report.md 
           
