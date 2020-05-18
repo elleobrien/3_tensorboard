@@ -15,11 +15,8 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
-          pip3 install -r requirements.txt
-          python train.py
-          
           echo "${{ secrets.TENSORBOARD_CREDENTIALS }}" > ~/.config/tensorboard/credentials/uploader-creds.json
-          python train.py & tensorboard dev upload --logdir logs
+          cat ~/.config/tensorboard/credentials/uploader-creds.json
           
           #cml-send-github-check report.md 
           
