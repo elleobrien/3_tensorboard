@@ -21,7 +21,7 @@ jobs:
           
           echo 'CML' > report.md
           cml-tensorboard-dev --logdir logs >> report.md
-          cml-send-comment report.md
+          cml-send-comment report.md --md --name "Go to tensorboard"
           python train.py
           cml-send-github-check report.md
           
