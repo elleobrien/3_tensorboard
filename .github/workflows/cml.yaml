@@ -5,7 +5,7 @@ on: [push]
 jobs:
   run:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
+    container: docker://dvcorg/cml:tensorboard-py3
 
     steps:
       - uses: actions/checkout@v2
@@ -17,16 +17,11 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
-          TENSORBOARD_CREDENTIALS='{"refresh_token": "1//03IJCTMThPsYECgYIARAAGAMSNwF-L9Iru6PoxuqEtGTcnvbXeGwi5j4cXBrFQpXdcmBhZyvZggR1WqKeIjhs1V57g1NvpCsUFnw", "token_uri": "https://oauth2.googleapis.com/token", "client_id": "373649185512-8v619h5kft38l4456nm2dj4ubeqsrvh6.apps.googleusercontent.com", "client_secret": "pOyAuU2yq2arsM98Bw5hwYtr", "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"], "type": "authorized_user"}'
-          mkdir -p ~/.config/tensorboard/credentials/
-          echo "$TENSORBOARD_CREDENTIALS" > ~/.config/tensorboard/credentials/uploader-creds.json
-
-          script -f -c "
-              tensorboard dev upload --logdir logs & \
-              sleep 5 && \
-              cat tb.log | grep http > report.md && \
-              cml-send-comment report.md && \
-              python train.py" tb.log
-
+          export TENSORBOARD_CREDENTIALS='{"refresh_token": "1//03IJCTMThPsYECgYIARAAGAMSNwF-L9Iru6PoxuqEtGTcnvbXeGwi5j4cXBrFQpXdcmBhZyvZggR1WqKeIjhs1V57g1NvpCsUFnw", "token_uri": "https://oauth2.googleapis.com/token", "client_id": "373649185512-8v619h5kft38l4456nm2dj4ubeqsrvh6.apps.googleusercontent.com", "client_secret": "pOyAuU2yq2arsM98Bw5hwYtr", "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"], "type": "authorized_user"}'
+          
+          echo 'CML' > report.md
+          cml-tensorboard-dev --logdir logs >> report.md
+          cml-send-comment report.md
+          python train.py
           cml-send-github-check report.md
           
