@@ -8,7 +8,7 @@ jobs:
     container: docker://davidgortega/cml:runner
 
     steps:
-      - name: dvc_cml_run
+      - name: deploy
         shell: bash
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
@@ -28,7 +28,7 @@ jobs:
 
           eval "$(docker-machine env --shell sh aws1)"
           docker run \
-            -e RUNNER_LABELS=cml \
+            -e RUNNER_LABELS=self-hosted \
             -e RUNNER_TOKEN=AADFJ5ZHJHZDXTSG5XG3UVS6ZUYHK \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner
@@ -37,7 +37,7 @@ jobs:
           echo "Deployed"
 
   run:
-    runs-on: [self-hosted, cml]
+    runs-on: [self-hosted]
     #container: docker://dvcorg/cml-py3:latest
 
     steps:
