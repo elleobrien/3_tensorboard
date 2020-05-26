@@ -12,6 +12,8 @@ jobs:
         shell: bash
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
           curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine
@@ -22,8 +24,6 @@ jobs:
 
           docker-machine create \
               --driver amazonec2 \
-              --amazonec2-access-key AKIAVLZY3QD2466NG2MV \
-              --amazonec2-secret-key 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 \
               --amazonec2-instance-type t2.micro \
               --amazonec2-region us-east-1 \
               --amazonec2-zone f \
@@ -32,7 +32,7 @@ jobs:
               aws1
 
           eval "$(docker-machine env --shell bash aws1)"
-          docker exec -ti dvcorg/cml:latest echo 'hello world'
+          docker run -ti dvcorg/cml:latest echo 'hello world'
           docker-machine rm aws1
 
           echo "Deployed"
