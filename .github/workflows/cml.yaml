@@ -13,29 +13,47 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
+          curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine
+          chmod +x /tmp/docker-machine
+          cp /tmp/docker-machine /usr/local/bin/docker-machine
+
           echo "Deploying..."
-          sleep 20
+
+          docker-machine create \
+              --driver amazonec2 \
+              --amazonec2-access-key AKIAVLZY3QD2WQZMDBXF \
+              --amazonec2-secret-key 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 \
+              --amazonec2-instance-type t2.micro \
+              --amazonec2-region us-east-1 \
+              --amazonec2-zone f \
+              --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
+              aws01
+
+          eval "$(docker-machine env --shell bash aws01)"
+          docker exec -ti dvcorg/cml:latest echo 'hello world'
+
           echo "Deployed"
 
-  run:
-    runs-on: [self-hosted]
-    container: docker://dvcorg/cml-py3:latest
+  # run:
+  #   runs-on: [self-hosted]
+  #   container: docker://dvcorg/cml-py3:latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: dvc_cml_run
-        shell: bash
-        env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }} 
-        run: |
-          pip3 install -r requirements.txt
+  #     - name: dvc_cml_run
+  #       shell: bash
+  #       env:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
+  #       run: |
+  #         pip3 install -r requirements.txt
 
-          export TB_CREDENTIALS='{"refresh_token": "1//03IJCTMThPsYECgYIARAAGAMSNwF-L9Iru6PoxuqEtGTcnvbXeGwi5j4cXBrFQpXdcmBhZyvZggR1WqKeIjhs1V57g1NvpCsUFnw", "token_uri": "https://oauth2.googleapis.com/token", "client_id": "373649185512-8v619h5kft38l4456nm2dj4ubeqsrvh6.apps.googleusercontent.com", "client_secret": "pOyAuU2yq2arsM98Bw5hwYtr", "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"], "type": "authorized_user"}'
+  #         export TB_CREDENTIALS='{"refresh_token": "1//03IJCTMThPsYECgYIARAAGAMSNwF-L9Iru6PoxuqEtGTcnvbXeGwi5j4cXBrFQpXdcmBhZyvZggR1WqKeIjhs1V57g1NvpCsUFnw", "token_uri": "https://oauth2.googleapis.com/token", "client_id": "373649185512-8v619h5kft38l4456nm2dj4ubeqsrvh6.apps.googleusercontent.com", "client_secret": "pOyAuU2yq2arsM98Bw5hwYtr", "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"], "type": "authorized_user"}'
           
-          echo 'CML' > report.md
-          cml-tensorboard-dev --logdir logs --md --name "Go to tensorboard" >> report.md
-          cml-send-comment report.md
-          python train.py
-          cml-send-github-check report.md
+  #         echo 'CML' > report.md
+  #         cml-tensorboard-dev --logdir logs --md --name "Go to tensorboard" >> report.md
+  #         cml-send-comment report.md
+  #         python train.py
+  #         cml-send-github-check report.md
           
