@@ -28,9 +28,9 @@ jobs:
               --amazonec2-region us-east-1 \
               --amazonec2-zone f \
               --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
-              aws01
+              aws09
 
-          eval "$(docker-machine env --shell bash aws01)"
+          eval "$(docker-machine env --shell bash aws09)"
           docker exec -ti dvcorg/cml:latest echo 'hello world'
 
           echo "Deployed"
