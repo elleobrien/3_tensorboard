@@ -27,7 +27,6 @@ jobs:
 
           eval "$(docker-machine env --shell sh aws1)"
           docker run \
-            -e RUNNER_LABELS=gpu \
             -e RUNNER_TOKEN=AADFJ5ZHJHZDXTSG5XG3UVS6ZUYHK \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner
@@ -36,7 +35,7 @@ jobs:
           echo "Deployed"
 
   job2:
-    runs-on: [self-hosted, gpu]
+    runs-on: [self-hosted]
     # container: docker://davidgortega/cml:runner
 
     steps:
