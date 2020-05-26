@@ -34,7 +34,8 @@ jobs:
 
           echo "Deployed"
 
-  job2:
+  ml:
+    needs: deploy
     runs-on: [self-hosted]
     # container: docker://davidgortega/cml:runner
 
