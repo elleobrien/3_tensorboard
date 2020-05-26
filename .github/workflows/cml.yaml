@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:latest
+    container: docker://davidgortega/cml:runner
 
     steps:
       - name: dvc_cml_run
@@ -27,30 +27,26 @@ jobs:
               aws1
 
           eval "$(docker-machine env --shell sh aws1)"
-          docker run davidgortega/cml:latest echo 'hello world'
+          docker run --runtime nvidia \
+            -e RUNNER_LABELS=cml \
+            -e RUNNER_TOKEN=AADFJ5ZHJHZDXTSG5XG3UVS6ZUYHK \
+            -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
+            davidgortega/cml:runner
           echo y | docker-machine rm aws1
 
           echo "Deployed"
 
-  # run:
-  #   runs-on: [self-hosted]
-  #   container: docker://dvcorg/cml-py3:latest
+  run:
+    runs-on: [cml]
+    #container: docker://dvcorg/cml-py3:latest
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: dvc_cml_run
-  #       shell: bash
-  #       env:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
-  #       run: |
-  #         pip3 install -r requirements.txt
-
-  #         export TB_CREDENTIALS='{"refresh_token": "1//03IJCTMThPsYECgYIARAAGAMSNwF-L9Iru6PoxuqEtGTcnvbXeGwi5j4cXBrFQpXdcmBhZyvZggR1WqKeIjhs1V57g1NvpCsUFnw", "token_uri": "https://oauth2.googleapis.com/token", "client_id": "373649185512-8v619h5kft38l4456nm2dj4ubeqsrvh6.apps.googleusercontent.com", "client_secret": "pOyAuU2yq2arsM98Bw5hwYtr", "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"], "type": "authorized_user"}'
-          
-  #         echo 'CML' > report.md
-  #         cml-tensorboard-dev --logdir logs --md --name "Go to tensorboard" >> report.md
-  #         cml-send-comment report.md
-  #         python train.py
-  #         cml-send-github-check report.md
+      - name: dvc_cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo "Trained!"
           
