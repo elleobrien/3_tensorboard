@@ -27,7 +27,7 @@ jobs:
               aws1
 
           eval "$(docker-machine env --shell sh aws1)"
-          docker run --runtime nvidia \
+          docker run \
             -e RUNNER_LABELS=cml \
             -e RUNNER_TOKEN=AADFJ5ZHJHZDXTSG5XG3UVS6ZUYHK \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
@@ -37,7 +37,7 @@ jobs:
           echo "Deployed"
 
   run:
-    runs-on: [cml]
+    runs-on: [self-hosted, cml]
     #container: docker://dvcorg/cml-py3:latest
 
     steps:
