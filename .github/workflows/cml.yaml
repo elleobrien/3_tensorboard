@@ -8,7 +8,7 @@ jobs:
     container: docker://davidgortega/cml:runner
 
     steps:
-      - name: dvc_cml_run
+      - name: deploy
         shell: bash
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
@@ -36,17 +36,17 @@ jobs:
 
           echo "Deployed"
 
-  # run:
-  #   runs-on: [self-hosted]
-  #   #container: docker://dvcorg/cml-py3:latest
+  run:
+    runs-on: [self-hosted]
+    container: docker://davidgortega/cml:runner
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: dvc_cml_run
-  #       env:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
-  #       run: |
-  #         echo "Training..."
-  #         echo "Trained!"
+      - name: dvc_cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo "Trained!"
           
