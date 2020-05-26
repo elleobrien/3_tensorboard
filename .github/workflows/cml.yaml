@@ -29,11 +29,11 @@ jobs:
               --amazonec2-zone f \
               --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
               --amazonec2-ssh-user ubuntu \
-              aws3
+              aws1
 
-          eval "$(docker-machine env --shell sh aws3)"
+          eval "$(docker-machine env --shell sh aws1)"
           docker run dvcorg/cml:latest echo 'hello world'
-          echo y | docker-machine rm aws3
+          echo y | docker-machine rm aws1
 
           echo "Deployed"
 
