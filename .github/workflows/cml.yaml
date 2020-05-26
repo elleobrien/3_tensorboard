@@ -23,7 +23,6 @@ jobs:
           echo "Deploying..."
 
           docker-machine create \
-              --shell sh \
               --driver amazonec2 \
               --amazonec2-instance-type t2.micro \
               --amazonec2-region us-east-1 \
