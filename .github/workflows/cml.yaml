@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
+    container: docker://davidgortega/cml:latest
 
     steps:
       - name: dvc_cml_run
@@ -15,11 +15,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
-          curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine
-          chmod +x /tmp/docker-machine
-          cp /tmp/docker-machine /usr/local/bin/docker-machine
-
           echo "Deploying..."
 
           docker-machine create \
@@ -32,7 +27,7 @@ jobs:
               aws1
 
           eval "$(docker-machine env --shell sh aws1)"
-          docker run dvcorg/cml:latest echo 'hello world'
+          docker run davidgortega/cml:latest echo 'hello world'
           echo y | docker-machine rm aws1
 
           echo "Deployed"
