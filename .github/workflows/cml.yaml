@@ -36,7 +36,7 @@ jobs:
           echo "Deployed"
 
   run:
-    runs-on: [self-hosted,gpu]
+    runs-on: [self-hosted, linux, gpu]
     # container: docker://davidgortega/cml:runner
     steps:
       - uses: actions/checkout@v2
