@@ -38,7 +38,6 @@ jobs:
   run:
     runs-on: [self-hosted]
     # container: docker://davidgortega/cml:runner
-
     steps:
       - uses: actions/checkout@v2
 
