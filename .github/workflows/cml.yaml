@@ -32,7 +32,7 @@ jobs:
               aws3
 
           eval "$(docker-machine env --shell sh aws3)"
-          docker run -ti dvcorg/cml:latest echo 'hello world'
+          docker run dvcorg/cml:latest echo 'hello world'
           echo y | docker-machine rm aws3
 
           echo "Deployed"
