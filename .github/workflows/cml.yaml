@@ -22,18 +22,18 @@ jobs:
 
           docker-machine create \
               --driver amazonec2 \
-              --amazonec2-access-key AKIAVLZY3QD2WQZMDBXF \
-              --amazonec2-secret-key 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 \
+              --amazonec2-access-key AKIAVLZY3QD2466NG2MV \
+              --amazonec2-secret-key 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 \
               --amazonec2-instance-type t2.micro \
               --amazonec2-region us-east-1 \
               --amazonec2-zone f \
               --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
-              aws06
-          
-          docker-machine ls
+              --amazonec2-ssh-user ubuntu \
+              aws1
 
-          eval "$(docker-machine env --shell bash aws06)"
+          eval "$(docker-machine env --shell bash aws1)"
           docker exec -ti dvcorg/cml:latest echo 'hello world'
+          docker-machine rm aws1
 
           echo "Deployed"
 
