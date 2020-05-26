@@ -8,7 +8,7 @@ jobs:
     container: docker://davidgortega/cml:runner
 
     steps:
-      - name: deploy
+      - name: dvc_cml_run
         shell: bash
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
