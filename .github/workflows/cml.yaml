@@ -31,7 +31,7 @@ jobs:
             -e RUNNER_TOKEN=AADFJ574BGUMZIMCNE6B7726ZVCXM \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner
-          echo y | docker-machine rm aws1
+          # echo y | docker-machine rm aws1
 
           echo "Deployed"
 
