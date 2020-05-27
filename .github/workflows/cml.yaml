@@ -32,7 +32,7 @@ jobs:
           docker-machine scp -r -q ~/.docker/machine $MACHINE:~/.docker
 
           docker run \
-            -v ~/.docker/machine:$HOME/.docker/machine \
+            -v ~/.docker/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
             -e RUNNER_TOKEN=AADFJ5YXSOHJ6MFDLQAMOT26Z2EAY \
