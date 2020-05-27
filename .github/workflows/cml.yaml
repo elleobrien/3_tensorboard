@@ -3,43 +3,43 @@ name: train-my-model
 on: [push]
 
 jobs:
-  deploy:
-    runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:runner2
+  # deploy:
+  #   runs-on: [ubuntu-latest]
+  #   container: docker://davidgortega/cml:runner2
 
-    steps:
-      - name: deploy
-        env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }} 
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          echo "Deploying..."
+  #   steps:
+  #     - name: deploy
+  #       env:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       run: |
+  #         echo "Deploying..."
 
-          MACHINE=aws1
-          docker-machine create \
-              --driver amazonec2 \
-              --amazonec2-instance-type t2.micro \
-              --amazonec2-region us-east-1 \
-              --amazonec2-zone f \
-              --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
-              --amazonec2-ssh-user ubuntu \
-              $MACHINE
+  #         MACHINE=aws1
+  #         docker-machine create \
+  #             --driver amazonec2 \
+  #             --amazonec2-instance-type t2.micro \
+  #             --amazonec2-region us-east-1 \
+  #             --amazonec2-zone f \
+  #             --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
+  #             --amazonec2-ssh-user ubuntu \
+  #             $MACHINE
 
-          eval "$(docker-machine env --shell sh $MACHINE)"
+  #         eval "$(docker-machine env --shell sh $MACHINE)"
 
-          docker run -d \
-            -e RUNNER_LABELS=gpu \
-            -e RUNNER_TOKEN=AADFJ56FF3JH3M2IDJEEDKC6ZZED4 \
-            -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            davidgortega/cml:runner2
+  #         docker run \
+  #           -e RUNNER_LABELS=gpu \
+  #           -e RUNNER_TOKEN=AADFJ5YXSOHJ6MFDLQAMOT26Z2EAY \
+  #           -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
+  #           davidgortega/cml:runner2
           
-          # echo y | docker-machine rm $MACHINE
+  #         # echo y | docker-machine rm $MACHINE
 
-          echo "Deployed"
+  #         echo "Deployed"
 
   ml:
-    needs: deploy
+    #needs: deploy
     runs-on: [self-hosted,gpu]
     # container: docker://davidgortega/cml:runner
 
