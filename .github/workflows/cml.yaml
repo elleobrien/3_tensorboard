@@ -40,7 +40,7 @@ jobs:
 
   ml:
     #needs: deploy
-    runs-on: [self-hosted,gpu]
+    runs-on: [self-hosted,gpu2]
     # container: docker://davidgortega/cml:runner
 
     steps:
