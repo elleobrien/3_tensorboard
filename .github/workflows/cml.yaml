@@ -16,6 +16,7 @@ jobs:
         run: |
           echo "Deploying..."
 
+          MACHINE=aws1
           docker-machine create \
               --driver amazonec2 \
               --amazonec2-instance-type t2.micro \
@@ -23,10 +24,9 @@ jobs:
               --amazonec2-zone f \
               --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
               --amazonec2-ssh-user ubuntu \
-              --amazonec2-keypair-name aws1 \
-              aws1
+              $MACHINE
 
-          eval "$(docker-machine env --shell sh aws1)"
+          eval "$(docker-machine env --shell sh $MACHINE)"
 
           docker run -d \
             -e RUNNER_LABELS=gpu \
@@ -34,7 +34,7 @@ jobs:
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
           
-            echo y | docker-machine rm aws1
+          # echo y | docker-machine rm $MACHINE
 
           echo "Deployed"
 
