@@ -42,9 +42,10 @@ jobs:
 
           docker logs --tail=100 runner | tail -n 100 && \
 
-          sleep 16 && \ 
-          echo "Deployed"
+          sleep 16 
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
+
+          echo "Deployed"
 
   ml:
     needs: deploy
