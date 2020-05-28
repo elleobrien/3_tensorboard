@@ -36,7 +36,7 @@ jobs:
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
-            -e repo_token=$repo_token \
+            -e GITHUB_TOKEN=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
