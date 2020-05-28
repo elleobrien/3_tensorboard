@@ -32,13 +32,13 @@ jobs:
           docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
 
-          docker run --name -d runner \
+          docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
             -e repo_token=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            dvcorg/cml:latest && \
+            davidgortega/cml:runner2 && \
 
           docker logs --tail=100 runner | tail -n 100 && \
 
