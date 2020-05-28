@@ -40,9 +40,9 @@ jobs:
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
-          docker logs --tail=100 runner
+          docker logs --tail=100 runner | tail 100
 
-          sleep 15
+          sleep 16
 
           echo "Deployed"
 
