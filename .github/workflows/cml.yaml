@@ -40,6 +40,8 @@ jobs:
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
+          sleep 15
+
           echo "Deployed"
 
   ml:
