@@ -38,7 +38,7 @@ jobs:
             -e RUNNER_LABELS=gpu \
             -e repo_token=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            davidgortega/cml2:runner2 && \
+            dvcorg/cml:latest && \
 
           docker logs --tail=100 runner | tail -n 100 && \
 
