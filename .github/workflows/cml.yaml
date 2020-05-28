@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          MACHINE=aws4
+          MACHINE=aws1
           docker-machine create \
               --driver amazonec2 \
               --amazonec2-instance-type t2.micro \
