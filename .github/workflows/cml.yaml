@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: deploy
         env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+          repo_token: ${{ secrets.REPO_TOKEN }} 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
@@ -36,7 +36,7 @@ jobs:
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
-            -e GITHUB_TOKEN=$repo_token \
+            -e repo_token=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
