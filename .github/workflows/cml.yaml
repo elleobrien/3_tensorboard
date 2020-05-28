@@ -42,7 +42,7 @@ jobs:
 
           docker logs --tail=100 runner | tail -n 100 && \
 
-          sleep 16 
+          sleep 15
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
           echo "Deployed"
@@ -61,5 +61,6 @@ jobs:
         run: |
           echo "Training..."
           echo "hello"
+          sleep 30
           echo "Trained!"
           
