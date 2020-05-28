@@ -28,9 +28,10 @@ jobs:
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
-          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine"
-          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine
-          docker-machine ssh $MACHINE "ls /docker_machine/machine"
+          ( 
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+          docker-machine ssh $MACHINE "ls /docker_machine/machine" && \
 
           docker run --name -d runner \
             -v /docker_machine/machine:/root/.docker/machine \
@@ -38,11 +39,11 @@ jobs:
             -e RUNNER_LABELS=gpu \
             -e repo_token=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            davidgortega/cml:runner2
+            davidgortega/cml:runner2 && \
 
-          docker logs --tail=100 runner | tail
+          docker logs --tail=100 runner | tail && \
 
-          sleep 16
+          sleep 16 ) || (echo y | docker-machine rm $MACHINE)
 
           echo "Deployed"
 
