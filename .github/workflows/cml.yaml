@@ -40,7 +40,7 @@ jobs:
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
-          docker logs --tail=100 runner | tail 100
+          docker logs --tail=100 runner | tail
 
           sleep 16
 
