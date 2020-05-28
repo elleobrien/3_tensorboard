@@ -30,6 +30,7 @@ jobs:
 
           docker-machine ssh $MACHINE "mkdir -p ~/.docker/machine"
           docker-machine scp -r -q ~/.docker/machine $MACHINE:~/.docker
+          docker-machine ssh $MACHINE "ls ~/.docker/machine"
 
           docker run \
             -v ~/.docker/machine:/root/.docker/machine \
