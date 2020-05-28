@@ -43,7 +43,7 @@ jobs:
 
           docker logs --tail=100 runner | tail && \
 
-          sleep 16 ) || (echo y | docker-machine rm $MACHINE)
+          sleep 16 ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
           echo "Deployed"
 
