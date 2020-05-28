@@ -32,15 +32,17 @@ jobs:
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine
           docker-machine ssh $MACHINE "ls /docker_machine/machine"
 
-          docker run -d \
+          docker run -d --name runner \
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
-            -e RUNNER_TOKEN=AADFJ53GTUQE7SXR7VIYTP26Z4SVG \
+            -e RUNNER_TOKEN=AADFJ57VYHJFA67MOBKHSCK6Z6GP2 \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2
 
-          sleep 30
+          docker logs --tail=100 runner
+
+          sleep 15
 
           echo "Deployed"
 
