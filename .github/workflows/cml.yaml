@@ -28,12 +28,12 @@ jobs:
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
-          docker-machine ssh $MACHINE "mkdir -p ~/.docker/machine"
-          docker-machine scp -r -q ~/.docker/machine $MACHINE:~/.docker
-          docker-machine ssh $MACHINE "ls ~/.docker/machine"
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine"
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine
+          docker-machine ssh $MACHINE "ls /docker_machine/machine"
 
           docker run \
-            -v ~/.docker/machine:/root/.docker/machine \
+            -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
             -e RUNNER_TOKEN=AADFJ5YXSOHJ6MFDLQAMOT26Z2EAY \
