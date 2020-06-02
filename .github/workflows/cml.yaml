@@ -48,7 +48,7 @@ jobs:
   #         echo "Deployed"
 
   ml:
-    needs: deploy
+    #needs: deploy
     runs-on: [self-hosted,gpu]
 
     steps:
