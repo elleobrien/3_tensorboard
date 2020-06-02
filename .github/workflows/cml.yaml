@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          MACHINE=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+          MACHINE="CML-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
           docker-machine create \
               --driver amazonec2 \
               --amazonec2-instance-type t2.micro \
@@ -42,7 +42,7 @@ jobs:
 
           docker logs --tail=100 runner | tail -n 100 && \
 
-          sleep 15
+          sleep 20
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
           echo "Deployed"
@@ -50,7 +50,6 @@ jobs:
   ml:
     needs: deploy
     runs-on: [self-hosted,gpu]
-    # container: docker://davidgortega/cml:runner
 
     steps:
       - uses: actions/checkout@v2
@@ -61,6 +60,6 @@ jobs:
         run: |
           echo "Training..."
           echo "hello"
-          sleep 30
+          sleep 300
           echo "Trained!"
           
