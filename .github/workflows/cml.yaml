@@ -3,49 +3,49 @@ name: train-my-model
 on: [push]
 
 jobs:
-  deploy:
-    runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:runner2
+  # deploy:
+  #   runs-on: [ubuntu-latest]
+  #   container: docker://davidgortega/cml:runner2
 
-    steps:
-      - name: deploy
-        env:
-          repo_token: ${{ secrets.REPO_TOKEN }} 
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          echo "Deploying..."
+  #   steps:
+  #     - name: deploy
+  #       env:
+  #         repo_token: ${{ secrets.REPO_TOKEN }} 
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       run: |
+  #         echo "Deploying..."
 
-          MACHINE="CML-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
-          docker-machine create \
-              --driver amazonec2 \
-              --amazonec2-instance-type t2.micro \
-              --amazonec2-region us-east-1 \
-              --amazonec2-zone f \
-              --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
-              --amazonec2-ssh-user ubuntu \
-              $MACHINE
+  #         MACHINE="CML-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
+  #         docker-machine create \
+  #             --driver amazonec2 \
+  #             --amazonec2-instance-type t2.micro \
+  #             --amazonec2-region us-east-1 \
+  #             --amazonec2-zone f \
+  #             --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
+  #             --amazonec2-ssh-user ubuntu \
+  #             $MACHINE
 
-          eval "$(docker-machine env --shell sh $MACHINE)"
+  #         eval "$(docker-machine env --shell sh $MACHINE)"
 
-          ( 
-          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
-          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+  #         ( 
+  #         docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
+  #         docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
 
-          docker run --name runner -d \
-            -v /docker_machine/machine:/root/.docker/machine \
-            -e DOCKER_MACHINE=${MACHINE} \
-            -e RUNNER_LABELS=gpu \
-            -e repo_token=$repo_token \
-            -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            davidgortega/cml:runner2 && \
+  #         docker run --name runner -d \
+  #           -v /docker_machine/machine:/root/.docker/machine \
+  #           -e DOCKER_MACHINE=${MACHINE} \
+  #           -e RUNNER_LABELS=gpu \
+  #           -e repo_token=$repo_token \
+  #           -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
+  #           davidgortega/cml:runner2 && \
 
-          docker logs --tail=100 runner | tail -n 100 && \
+  #         docker logs --tail=100 runner | tail -n 100 && \
 
-          sleep 20
-          ) || (echo y | docker-machine rm $MACHINE && exit 1)
+  #         sleep 20
+  #         ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
-          echo "Deployed"
+  #         echo "Deployed"
 
   ml:
     needs: deploy
@@ -60,6 +60,6 @@ jobs:
         run: |
           echo "Training..."
           echo "hello"
-          sleep 300
+          sleep 10
           echo "Trained!"
           
