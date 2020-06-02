@@ -60,6 +60,6 @@ jobs:
         run: |
           echo "Training..."
           echo "hello"
-          sleep 10
+          sleep 15
           echo "Trained!"
           
