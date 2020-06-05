@@ -39,7 +39,7 @@ jobs:
             -e RUNNER_LABELS=gpu \
             -e repo_token=$repo_token \
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
-            davidgortega/cml:runner2 && \
+            cml-cloud-runner:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
