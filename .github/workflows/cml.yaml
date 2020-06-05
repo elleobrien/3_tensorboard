@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:runner2
+    container: docker://dvcorg/cml-cloud-runner:latest
 
     steps:
       - name: deploy
@@ -41,10 +41,8 @@ jobs:
             -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
             davidgortega/cml:runner2 && \
 
-          sleep 20 && echo "Deployed"
+          sleep 20 && echo "Deployed $MACHINE"
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
-
-          
 
   ml:
     needs: deploy
@@ -58,7 +56,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           echo "Training..."
-          echo "hello"
           sleep 135
           echo "Trained!"
           
