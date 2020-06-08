@@ -27,7 +27,7 @@ jobs:
           docker-machine create --driver google \
             --google-machine-type "f1-micro" \
             --google-project "cml-project-279709" \
-            ----google-username "root" \
+            --google-username "root" \
               $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
