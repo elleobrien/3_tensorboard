@@ -33,8 +33,8 @@ jobs:
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
-          (docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine" && \ 
-          docker-machine ssh $MACHINE "sudo chmod 777 /docker_machine" && \
+          (
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
           docker-machine ssh $MACHINE "sudo chmod -R 777 /docker_machine" && \
           docker-machine scp -q gce-credentials.json $MACHINE:/docker_machine/gce-credentials.json && \
