@@ -78,7 +78,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA  > gce-credentials.json
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA | cut -c2- > gce-credentials.json > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           RUNNER_LABELS="cml,gce"
