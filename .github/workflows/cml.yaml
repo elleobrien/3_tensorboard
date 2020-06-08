@@ -19,26 +19,31 @@ jobs:
           echo "Deploying..."
 
           echo $GOOGLE_APPLICATION_CREDENTIALS_DATA | cut -c2-9000000000000 > gce-credentials.json
+
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
 
-          MACHINE="gs3"
+          MACHINE="gs4"
           docker-machine create --driver google \
             --google-machine-type "f1-micro" \
             --google-project "cml-project-279709" \
-            --google-username "root" \
             --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
               $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
           ( 
-          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
-          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && sudo chmod 777 /docker_machine"\
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine" && \ 
+          docker-machine ssh $MACHINE "sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+          docker-machine ssh $MACHINE "sudo chmod -R 777 /docker_machine" && \
+          docker-machine scp -q gce-credentials.json $MACHINE:$HOME && \
 
-          docker run --name runner -d \
+          docker run --name runner3 \
             -v /docker_machine/machine:/root/.docker/machine \
+            -v $HOME/gce-credentials.json:/gce-credentials.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
             -e RUNNER_IDLE_TIMEOUT=120 \
             -e DOCKER_MACHINE=${MACHINE} \
             -e RUNNER_LABELS=gpu \
