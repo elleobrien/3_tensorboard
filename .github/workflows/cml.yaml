@@ -38,11 +38,11 @@ jobs:
           docker-machine ssh $MACHINE "sudo chmod 777 /docker_machine" && \
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
           docker-machine ssh $MACHINE "sudo chmod -R 777 /docker_machine" && \
-          docker-machine scp -q gce-credentials.json $MACHINE:$HOME && \
+          docker-machine scp -q gce-credentials.json $MACHINE:/gce-credentials.json && \
 
           docker run --name runner3 \
             -v /docker_machine/machine:/root/.docker/machine \
-            -v $HOME/gce-credentials.json:/gce-credentials.json \
+            -v /gce-credentials.json:/gce-credentials.json \
             -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
             -e RUNNER_IDLE_TIMEOUT=120 \
             -e DOCKER_MACHINE=${MACHINE} \
