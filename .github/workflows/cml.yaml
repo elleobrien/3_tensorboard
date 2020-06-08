@@ -21,7 +21,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=gce-credentials.json
 
           cml-send-comment gce-credentials.json
-          HI=Hello
+          HI='Hello'
           echo "$HI" > gce-credentials.json
           cml-send-comment gce-credentials.json
 
