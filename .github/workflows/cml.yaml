@@ -17,6 +17,7 @@ jobs:
         run: |
           echo "Deploying..."
 
+          GOOGLE_APPLICATION_CREDENTIALS_DATA='hello world'
           DATA=`echo \'$GOOGLE_APPLICATION_CREDENTIALS_DATA\'`
           echo "$DATA" > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=gce-credentials.json
