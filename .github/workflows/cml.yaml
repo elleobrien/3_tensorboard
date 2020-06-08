@@ -20,7 +20,7 @@ jobs:
           echo "$GOOGLE_APPLICATION_CREDENTIALS_DATA" > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=gce-credentials.json
 
-          cat gce-credentials.json
+          cml-send-comment gce-credentials.json
 
           MACHINE="CML-$(openssl rand -hex 12)"
           docker-machine create --driver google \
