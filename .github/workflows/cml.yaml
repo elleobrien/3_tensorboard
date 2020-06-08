@@ -49,7 +49,7 @@ jobs:
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
   ml-aws:
-    needs: deploy-gce
+    needs: deploy-aws
     runs-on: [self-hosted,aws]
 
     steps:
