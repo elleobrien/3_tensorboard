@@ -16,10 +16,14 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
         run: |
           echo "Deploying..."
-          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA
+          
           GCPATH=$HOME/gce-credentials.json
-          cat $GOOGLE_APPLICATION_CREDENTIALS_DATA > $GCPATH
+          echo "$GOOGLE_APPLICATION_CREDENTIALS_DATA" > (echo "$GCPATH")
           export GOOGLE_APPLICATION_CREDENTIALS=$GCPATH
+
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA
+          echo $GOOGLE_APPLICATION_CREDENTIALS
+          cat $GCPATH
 
           MACHINE="CML-$(openssl rand -hex 12)"
           docker-machine create --driver google \
