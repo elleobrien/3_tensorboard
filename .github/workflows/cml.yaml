@@ -13,17 +13,18 @@ jobs:
           repo_token: ${{ secrets.REPO_TOKEN }} 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
         run: |
           echo "Deploying..."
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA
+          GCPATH=$HOME/gce-credentials.json
+          cat $GOOGLE_APPLICATION_CREDENTIALS_DATA > $GCPATH
+          export GOOGLE_APPLICATION_CREDENTIALS=$GCPATH
 
           MACHINE="CML-$(openssl rand -hex 12)"
-          docker-machine create \
-              --driver amazonec2 \
-              --amazonec2-instance-type t2.micro \
-              --amazonec2-region us-east-1 \
-              --amazonec2-zone f \
-              --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
-              --amazonec2-ssh-user ubuntu \
+          docker-machine create --driver google \
+            --google-machine-type "f1-micro" \
+            --google-project cml-project-279709 \
               $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
