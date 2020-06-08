@@ -18,7 +18,7 @@ jobs:
           echo "Deploying..."
           
           GCPATH=$HOME/gce-credentials.json
-          echo "$GOOGLE_APPLICATION_CREDENTIALS_DATA" > (echo "$GCPATH")
+          echo "$GOOGLE_APPLICATION_CREDENTIALS_DATA" > "$GCPATH"
           export GOOGLE_APPLICATION_CREDENTIALS=$GCPATH
 
           echo $GOOGLE_APPLICATION_CREDENTIALS_DATA
