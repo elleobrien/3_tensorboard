@@ -24,8 +24,8 @@ jobs:
 
           cml-send-comment gce-credentials.json
 
-          MACHINE="gs4"
-          docker-machine create --driver google \
+          MACHINE=CML
+          docker-machine create --driver google -d \
             --google-machine-type "f1-micro" \
             --google-project "cml-project-279709" \
             --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
@@ -40,7 +40,7 @@ jobs:
           docker-machine ssh $MACHINE "sudo chmod -R 777 /docker_machine" && \
           docker-machine scp -q gce-credentials.json $MACHINE:/gce-credentials.json && \
 
-          docker run --name runner3 \
+          docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
             -v /gce-credentials.json:/gce-credentials.json \
             -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
