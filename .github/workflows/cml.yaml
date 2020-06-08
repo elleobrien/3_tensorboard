@@ -28,14 +28,14 @@ jobs:
             --google-machine-type "f1-micro" \
             --google-project "cml-project-279709" \
             --google-username "root" \
-            --google-machine-image ubuntu-1804-bionic-v20200529 \
+            --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
               $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
           ( 
           docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
-          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && sudo chmod 777 /docker_machine"\
 
           docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
