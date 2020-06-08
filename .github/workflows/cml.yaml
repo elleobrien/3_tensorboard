@@ -3,7 +3,7 @@ name: train-my-model
 on: [push]
 
 jobs:
-  deploy:
+  deploy-aws:
     runs-on: [ubuntu-latest]
     container: docker://dvcorg/cml-cloud-runner:latest
 
@@ -14,52 +14,113 @@ jobs:
           repo_token: ${{ secrets.REPO_TOKEN }} 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
         run: |
           echo "Deploying..."
 
-          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA  > gce-credentials.json
-
-          export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
-
-          cml-send-comment gce-credentials.json
-
+          RUNNER_LABELS="cml,aws"
+          RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
           MACHINE="cml$(date +%s)"
-          docker-machine create --driver google \
-            --google-machine-type "f1-micro" \
-            --google-project "cml-project-279709" \
-            --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
-              $MACHINE
+
+          docker-machine create \
+            --driver amazonec2 \
+            --amazonec2-instance-type t2.micro \
+            --amazonec2-region us-east-1 \
+            --amazonec2-zone f \
+            --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
+            --amazonec2-ssh-user ubuntu \
+            $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
 
           (
           docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
-          docker-machine scp -q gce-credentials.json $MACHINE:/docker_machine/gce-credentials.json && \
 
           docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
-            -v /docker_machine/gce-credentials.json:/gce-credentials.json \
-            -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
-            -e RUNNER_IDLE_TIMEOUT=120 \
             -e DOCKER_MACHINE=${MACHINE} \
-            -e RUNNER_LABELS=gpu \
             -e repo_token=$repo_token \
-            -e RUNNER_REPO=https://github.com/DavidGOrtega/3_tensorboard \
+            -e RUNNER_LABELS=${RUNNER_LABELS} \
+            -e RUNNER_REPO=${RUNNER_REPO} \
+            -e RUNNER_IDLE_TIMEOUT=120 \
             dvcorg/cml-cloud-runner:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (echo y | docker-machine rm $MACHINE && exit 1)
 
-  ml:
-    needs: deploy
-    runs-on: [self-hosted,gpu]
+  ml-aws:
+    needs: deploy-gce
+    runs-on: [self-hosted,aws]
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: dvc_cml_run
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hello world!' >> report.md
+          cml-send-comment report.md
+          echo "Trained!"
+
+
+  deploy-gce:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-cloud-runner:latest
+
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
+        run: |
+          echo "Deploying..."
+
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA  > gce-credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
+
+          RUNNER_LABELS="cml,gce"
+          RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
+          MACHINE="cml$(date +%s)"
+
+          docker-machine create --driver google \
+            --google-machine-type "f1-micro" \
+            --google-project "cml-project-279709" \
+            --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
+            $MACHINE
+
+          eval "$(docker-machine env --shell sh $MACHINE)"
+
+          (
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+
+          docker-machine scp -q gce-credentials.json $MACHINE:/docker_machine/gce-credentials.json && \
+
+          docker run --name runner -d \
+            -v /docker_machine/machine:/root/.docker/machine \
+            -e DOCKER_MACHINE=${MACHINE} \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=${RUNNER_LABELS} \
+            -e RUNNER_REPO=${RUNNER_REPO} \
+            -e RUNNER_IDLE_TIMEOUT=120 \
+            -v /docker_machine/gce-credentials.json:/gce-credentials.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
+            dvcorg/cml-cloud-runner:latest && \
+
+          sleep 20 && echo "Deployed $MACHINE"
+          ) || (echo y | docker-machine rm $MACHINE && exit 1)
+
+  ml-gce:
+    needs: deploy-gce
+    runs-on: [self-hosted,gce]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
