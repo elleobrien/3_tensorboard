@@ -23,10 +23,10 @@ jobs:
 
           cml-send-comment gce-credentials.json
 
-          MACHINE="CML-$(openssl rand -hex 12)"
+          MACHINE="gs1"
           docker-machine create --driver google \
             --google-machine-type "f1-micro" \
-            --google-project cml-project-279709 \
+            --google-project "cml-project-279709" \
               $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
