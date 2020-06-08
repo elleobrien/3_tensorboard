@@ -24,7 +24,7 @@ jobs:
 
           cml-send-comment gce-credentials.json
 
-          MACHINE="CML-$(date +%s)"
+          MACHINE="cml$(date +%s)"
           docker-machine create --driver google \
             --google-machine-type "f1-micro" \
             --google-project "cml-project-279709" \
