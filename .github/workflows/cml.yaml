@@ -17,10 +17,8 @@ jobs:
         run: |
           echo "Deploying..."
 
-          GOOGLE_APPLICATION_CREDENTIALS_DATA='hello world'
-          DATA=`echo \'$GOOGLE_APPLICATION_CREDENTIALS_DATA\'`
-          echo "$DATA" > gce-credentials.json
-          export GOOGLE_APPLICATION_CREDENTIALS=gce-credentials.json
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA | cut -c2-9000000000000 > gce-credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
 
