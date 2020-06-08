@@ -17,12 +17,10 @@ jobs:
         run: |
           echo "Deploying..."
 
-          echo "$GOOGLE_APPLICATION_CREDENTIALS_DATA" > gce-credentials.json
+          DATA='echo $GOOGLE_APPLICATION_CREDENTIALS_DATA'
+          echo "$DATA" > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=gce-credentials.json
 
-          cml-send-comment gce-credentials.json
-          HI='Hello'
-          echo "$HI" > gce-credentials.json
           cml-send-comment gce-credentials.json
 
           MACHINE="CML-$(openssl rand -hex 12)"
