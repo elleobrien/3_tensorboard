@@ -14,6 +14,7 @@ jobs:
           repo_token: ${{ secrets.REPO_TOKEN }} 
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: |
           echo "Deploying..."
 
@@ -25,6 +26,7 @@ jobs:
             --driver azure \
             --azure-client-id $AZURE_CLIENT_ID \
             --azure-client-secret $AZURE_CLIENT_SECRET \
+            --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
