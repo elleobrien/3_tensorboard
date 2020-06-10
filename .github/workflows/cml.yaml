@@ -12,6 +12,64 @@ jobs:
         shell: bash
         env:
           repo_token: ${{ secrets.REPO_TOKEN }} 
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        run: |
+          echo "Deploying..."
+
+          RUNNER_LABELS="cml,aws"
+          RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
+          MACHINE="cml$(date +%s)"
+
+          docker-machine create \
+            --driver azure \
+            --azure-client-id $AZURE_CLIENT_ID \
+            --azure-client-secret $AZURE_CLIENT_SECRET \
+            $MACHINE
+
+          eval "$(docker-machine env --shell sh $MACHINE)"
+
+          (
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
+
+          docker run --name runner -d \
+            -v /docker_machine/machine:/root/.docker/machine \
+            -e DOCKER_MACHINE=$MACHINE \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=120 \
+            dvcorg/cml-cloud-runner:latest && \
+
+          sleep 20 && echo "Deployed $MACHINE"
+          ) || (echo y | docker-machine rm $MACHINE && exit 1)
+
+  ml-azure:
+    needs: deploy-azure
+    runs-on: [self-hosted,azure]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hi from azure!' >> report.md
+          cml-send-comment report.md
+          echo "Trained!"
+
+  deploy-aws:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-cloud-runner:latest
+
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
@@ -36,10 +94,10 @@ jobs:
 
           docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
-            -e DOCKER_MACHINE=${MACHINE} \
+            -e DOCKER_MACHINE=$MACHINE \
             -e repo_token=$repo_token \
-            -e RUNNER_LABELS=${RUNNER_LABELS} \
-            -e RUNNER_REPO=${RUNNER_REPO} \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
             dvcorg/cml-cloud-runner:latest && \
 
@@ -58,7 +116,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           echo "Training..."
-          echo 'Hello world!' >> report.md
+          echo 'Hi from aws!' >> report.md
           cml-send-comment report.md
           echo "Trained!"
 
@@ -99,10 +157,10 @@ jobs:
 
           docker run --name runner -d \
             -v /docker_machine/machine:/root/.docker/machine \
-            -e DOCKER_MACHINE=${MACHINE} \
+            -e DOCKER_MACHINE=$MACHINE \
             -e repo_token=$repo_token \
-            -e RUNNER_LABELS=${RUNNER_LABELS} \
-            -e RUNNER_REPO=${RUNNER_REPO} \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
             -v /docker_machine/gce-credentials.json:/gce-credentials.json \
             -e GOOGLE_APPLICATION_CREDENTIALS='/gce-credentials.json' \
@@ -123,7 +181,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           echo "Training..."
-          echo 'Hello world!' >> report.md
+          echo 'Hi from Google Cloud!' >> report.md
           cml-send-comment report.md
           echo "Trained!"
           
