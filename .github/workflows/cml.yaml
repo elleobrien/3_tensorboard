@@ -98,7 +98,7 @@ jobs:
             --amazonec2-instance-type g4dn.2xlarge \
             --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
             --amazonec2-ssh-user ubuntu \
-            --amazonec2-ami ami-0e60fa461a16192c0 \
+            --amazonec2-ami "NVIDIA Deep Learning AMI" \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
