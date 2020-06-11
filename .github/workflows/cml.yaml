@@ -27,8 +27,10 @@ jobs:
             --azure-client-id $AZURE_CLIENT_ID \
             --azure-client-secret $AZURE_CLIENT_SECRET \
             --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
+            --azure-location "eastus" \
+            --azure-resource-group $MACHINE \
             --azure-size "Standard_NC6" \
-            --azure-image "NVIDIA-GPU-Cloud-Image-2020.03.24" \
+            --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
