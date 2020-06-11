@@ -95,10 +95,10 @@ jobs:
 
           docker-machine create \
             --driver amazonec2 \
-            --amazonec2-instance-type g4dn.2xlarge \
+            --amazonec2-instance-type g4dn.xlarge \
             --amazonec2-vpc-id vpc-06bc773d85a0a04f7 \
             --amazonec2-ssh-user ubuntu \
-            --amazonec2-ami "NVIDIA Deep Learning AMI" \
+            --amazonec2-ami ami-085925f297f89fce1 \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
