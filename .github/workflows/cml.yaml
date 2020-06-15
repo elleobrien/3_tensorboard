@@ -149,7 +149,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          printf  "$GOOGLE_APPLICATION_CREDENTIALS_DATA" | cut -c2- > gce-credentials.json > gce-credentials.json
+          printf "${GOOGLE_APPLICATION_CREDENTIALS_DATA@Q}" | cut -c2- > gce-credentials.json > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
