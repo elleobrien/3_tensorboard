@@ -152,6 +152,8 @@ jobs:
           echo $GOOGLE_APPLICATION_CREDENTIALS_DATA | cut -c2- > gce-credentials.json > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
+          cml-send-comment gce-credentials.json
+
           RUNNER_LABELS="cml,gce"
           RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
           MACHINE="cml$(date +%s)"
