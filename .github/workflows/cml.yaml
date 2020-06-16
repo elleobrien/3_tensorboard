@@ -142,7 +142,7 @@ jobs:
 
     steps:
       - name: deploy
-        shell: bash
+        #shell: bash
         env:
           repo_token: ${{ secrets.REPO_TOKEN }} 
           GOOGLE_APPLICATION_CREDENTIALS_DATA: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
