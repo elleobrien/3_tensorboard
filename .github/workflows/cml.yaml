@@ -142,14 +142,14 @@ jobs:
 
     steps:
       - name: deploy
-        # shell: bash
+        shell: bash
         env:
           repo_token: ${{ secrets.REPO_TOKEN }} 
-          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
+          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           echo "Deploying..."
 
-          printf "${GOOGLE_APPLICATION_CREDENTIALS_DATA@Q}" | cut -c2- > gce-credentials.json > gce-credentials.json
+          echo '{{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | cut -c2- > gce-credentials.json > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
