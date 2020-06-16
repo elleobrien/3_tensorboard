@@ -149,7 +149,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          echo '{{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | cut -c2- > gce-credentials.json > gce-credentials.json
+          echo '$${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | cut -c2- > gce-credentials.json > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
