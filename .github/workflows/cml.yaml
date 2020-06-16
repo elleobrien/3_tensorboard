@@ -145,12 +145,12 @@ jobs:
         shell: bash
         env:
           repo_token: ${{ secrets.REPO_TOKEN }} 
-          GOOGLE_APPLICATION_CREDENTIALS_DATA: $${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS_DATA: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           echo "Deploying..."
 
-          myvar='$${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-          echo $myvar | cut -c2- > gce-credentials.json > gce-credentials.json
+          myvar='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+          echo $myvar > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
