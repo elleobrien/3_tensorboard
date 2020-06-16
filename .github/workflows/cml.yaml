@@ -145,14 +145,12 @@ jobs:
         shell: bash
         env:
           repo_token: ${{ secrets.REPO_TOKEN }} 
-          GOOGLE_APPLICATION_CREDENTIALS_DATA: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS_DATA: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}
         run: |
           echo "Deploying..."
-          
+
           echo $GOOGLE_APPLICATION_CREDENTIALS_DATA > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
-
-          cml-send-comment gce-credentials.json
 
           RUNNER_LABELS="cml,gce"
           RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
