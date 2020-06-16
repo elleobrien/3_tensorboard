@@ -148,9 +148,8 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS_DATA: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           echo "Deploying..."
-
-          myvar='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-          echo $myvar > gce-credentials.json
+          
+          echo $GOOGLE_APPLICATION_CREDENTIALS_DATA > gce-credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
           cml-send-comment gce-credentials.json
