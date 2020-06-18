@@ -74,7 +74,7 @@ jobs:
           nvidia-smi >> report.md
           cml-send-comment report.md
 
-          pip3 install -r requirements.txt
+          pip install -r requirements.txt
           python train.py
           
           echo "Trained!"
