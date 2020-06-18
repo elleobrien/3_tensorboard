@@ -31,6 +31,7 @@ jobs:
             --azure-resource-group $MACHINE \
             --azure-size "Standard_NC6" \
             --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
+            --azure-no-public-ip \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
