@@ -1,9 +1,8 @@
 import tensorflow as tf
 import datetime
 
-from tf.keras import backend as K
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-print(K.tensorflow_backend._get_available_gpus())
+print(tf.keras.tensorflow_backend._get_available_gpus())
 
 mnist = tf.keras.datasets.mnist
 
