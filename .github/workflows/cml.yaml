@@ -53,10 +53,10 @@ jobs:
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
-            dvcorg/cml-py3-cloud-runner:latest && \
+            dvcorg/cml-gpu-py3-cloud-runner:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
-          ) || (docker-machine rm -y -f $MACHINE && exit 1)
+          ) || (docker-machine rm -f $MACHINE && exit 1)
 
   ml-azure:
     needs: deploy-azure
@@ -121,7 +121,7 @@ jobs:
   #           dvcorg/cml-cloud-runner:latest && \
 
   #         sleep 20 && echo "Deployed $MACHINE"
-  #         ) || (docker-machine rm -y -f $MACHINE && exit 1)
+  #         ) || (docker-machine rm -f $MACHINE && exit 1)
 
   # ml-aws:
   #   needs: deploy-aws
@@ -186,7 +186,7 @@ jobs:
   #           dvcorg/cml-cloud-runner:latest && \
 
   #         sleep 20 && echo "Deployed $MACHINE"
-  #         ) || (docker-machine rm -y -f $MACHINE && exit 1)
+  #         ) || (docker-machine rm -f $MACHINE && exit 1)
 
   # ml-gce:
   #   needs: deploy-gce
