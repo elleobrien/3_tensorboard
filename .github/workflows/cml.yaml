@@ -123,30 +123,30 @@ jobs:
 
           docker-machine rm -f $MACHINE
 
-  register-runner:
-    runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml-runner:latest
+  # register-runner:
+  #   runs-on: [ubuntu-latest]
+  #   container: docker://davidgortega/cml-runner:latest
 
-    steps:
-      - name: deploy
-        shell: bash
-        env:
-          repo_token: ${{ secrets.REPO_TOKEN }} 
-        run: |
-          RUNNER_LABELS="azure"
-          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+  #   steps:
+  #     - name: deploy
+  #       shell: bash
+  #       env:
+  #         repo_token: ${{ secrets.REPO_TOKEN }} 
+  #       run: |
+  #         RUNNER_LABELS="azure"
+  #         RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
-          docker run --name runner \
-            -e repo_token=$repo_token \
-            -e RUNNER_LABELS=$RUNNER_LABELS \
-            -e RUNNER_REPO=$RUNNER_REPO \
-            -e RUNNER_IDLE_TIMEOUT=10 \
-            -e RUNNER_UNREGISTER=n \
-            -e RUNNER_NAME=runner \
-            davidgortega/cml-runner:latest
+  #         docker run --name runner \
+  #           -e repo_token=$repo_token \
+  #           -e RUNNER_LABELS=$RUNNER_LABELS \
+  #           -e RUNNER_REPO=$RUNNER_REPO \
+  #           -e RUNNER_IDLE_TIMEOUT=10 \
+  #           -e RUNNER_UNREGISTER=n \
+  #           -e RUNNER_NAME=runner \
+  #           davidgortega/cml-runner:latest
 
   ml-azure:
-    needs: register-runner
+    # needs: register-runner
     runs-on: [self-hosted,azure]
 
     steps:
