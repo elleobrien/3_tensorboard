@@ -95,7 +95,7 @@ jobs:
         run: |
           echo "Deploying..."
 
-          RUNNER_LABELS="cml,azure"
+          RUNNER_LABELS="azure"
           RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
           MACHINE="cml$(date +%s)"
 
@@ -110,46 +110,28 @@ jobs:
             --azure-resource-group $MACHINE \
             $MACHINE
 
-          (
-            eval "$(docker-machine env --shell sh $MACHINE)" &&
-
-            docker run --name runner \
-              -v /docker_machine/machine:/root/.docker/machine \
-              -e DOCKER_MACHINE=$MACHINE \
-              -e repo_token=$repo_token \
-              -e RUNNER_LABELS=$RUNNER_LABELS \
-              -e RUNNER_REPO=$RUNNER_REPO \
-              -e RUNNER_IDLE_TIMEOUT=120 \
-              davidgortega/cml-runner:latest &&
-
-            echo 'removing...' &&
-            docker-machine rm -f $MACHINE
-          ) || (docker-machine rm -f $MACHINE && exit 1)
-
-  register-runner:
-    runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml-runner:latest
-
-    steps:
-      - name: deploy
-        shell: bash
-        env:
-          repo_token: ${{ secrets.REPO_TOKEN }} 
-        run: |
-          RUNNER_LABELS="cml,azure"
-          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+          eval "$(docker-machine env --shell sh $MACHINE)" &&
 
           docker run --name runner \
+            -v /docker_machine/machine:/root/.docker/machine \
+            -e DOCKER_MACHINE=$MACHINE \
             -e repo_token=$repo_token \
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
-            -e RUNNER_IDLE_TIMEOUT=10 \
-            -e RUNNER_UNREGISTER=n \
-            -e RUNNER_NAME=runner \
-            davidgortega/cml-runner:latest
+            davidgortega/cml-runner:latest &&
+
+          docker-machine rm -f $MACHINE
+
+  wait-azure:
+    needs: deploy-azure
+
+    steps:
+      - name: deploy
+        run: |
+          echo 'waiting deploy to finish...' 
 
   ml-azure:
-    needs: register-runner
+    needs: wait-azure
     runs-on: [self-hosted,azure]
 
     steps:
