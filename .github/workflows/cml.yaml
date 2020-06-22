@@ -145,6 +145,8 @@ jobs:
             -e RUNNER_NAME=runner \
             davidgortega/cml-runner:latest
 
+          sleep 20
+
   ml-azure:
     # needs: register-runner
     runs-on: [self-hosted,azure]
