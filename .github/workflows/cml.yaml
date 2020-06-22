@@ -3,7 +3,7 @@ name: train-my-model
 on: [push]
 
 jobs:
-  deploy-azure:
+  deploy-azure-gpu:
     runs-on: [ubuntu-latest]
     container: docker://dvcorg/cml-py3-cloud-runner:latest
 
@@ -58,6 +58,73 @@ jobs:
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
+  ml-azure-gpu:
+    needs: deploy-azure
+    runs-on: [self-hosted,azure]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hi from azure!' >> report.md
+          nvidia-smi >> report.md
+          cml-send-comment report.md
+
+          pip3 install -r requirements.txt
+          python train.py
+          
+          echo "Trained!"
+
+
+  deploy-azure:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-py3-cloud-runner:latest
+
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          echo "Deploying..."
+
+          RUNNER_LABELS="cml,azure"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+          MACHINE="cml$(date +%s)"
+
+          docker-machine create \
+            --driver azure \
+            --azure-client-id $AZURE_CLIENT_ID \
+            --azure-client-secret $AZURE_CLIENT_SECRET \
+            --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
+            --azure-size "Standard_NC6" \
+            --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
+            --azure-location "eastus" \
+            --azure-resource-group $MACHINE \
+            $MACHINE
+
+          (
+            eval "$(docker-machine env --shell sh $MACHINE)" &&
+
+            docker run --name runner \
+              -v /docker_machine/machine:/root/.docker/machine \
+              -e DOCKER_MACHINE=$MACHINE \
+              -e repo_token=$repo_token \
+              -e RUNNER_LABELS=$RUNNER_LABELS \
+              -e RUNNER_REPO=$RUNNER_REPO \
+              -e RUNNER_IDLE_TIMEOUT=60 \
+              dvcorg/cml-py3-cloud-runner:latest &&
+
+            docker-machine rm -f $MACHINE
+          ) || (docker-machine rm -f $MACHINE && exit 1)
+
   ml-azure:
     needs: deploy-azure
     runs-on: [self-hosted,azure]
@@ -78,6 +145,7 @@ jobs:
           python train.py
           
           echo "Trained!"
+
 
   # deploy-aws:
   #   runs-on: [ubuntu-latest]
