@@ -120,14 +120,35 @@ jobs:
               -e RUNNER_LABELS=$RUNNER_LABELS \
               -e RUNNER_REPO=$RUNNER_REPO \
               -e RUNNER_IDLE_TIMEOUT=60 \
-              dvcorg/cml-py3-cloud-runner:latest &&
+              davidgortega/cml-runner:latest &&
 
             echo 'removing...' &&
             docker-machine rm -f $MACHINE
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
+  register-runner:
+    runs-on: [ubuntu-latest]
+    container: docker://davidgortega/cml-runner:latest
+
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+        run: |
+          RUNNER_LABELS="cml,azure"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+
+          docker run --name runner \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=10 \
+            -e RUNNER_UNREGISTER=n \
+            davidgortega/cml-runner:latest
+
   ml-azure:
-    needs: deploy-azure
+    needs: register-runner
     runs-on: [self-hosted,azure]
 
     steps:
