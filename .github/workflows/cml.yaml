@@ -119,7 +119,7 @@ jobs:
               -e repo_token=$repo_token \
               -e RUNNER_LABELS=$RUNNER_LABELS \
               -e RUNNER_REPO=$RUNNER_REPO \
-              -e RUNNER_IDLE_TIMEOUT=60 \
+              -e RUNNER_IDLE_TIMEOUT=120 \
               davidgortega/cml-runner:latest &&
 
             echo 'removing...' &&
@@ -145,6 +145,7 @@ jobs:
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=10 \
             -e RUNNER_UNREGISTER=n \
+            -e RUNNER_NAME=runner \
             davidgortega/cml-runner:latest
 
   ml-azure:
