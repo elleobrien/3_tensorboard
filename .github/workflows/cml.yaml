@@ -110,28 +110,46 @@ jobs:
             --azure-resource-group $MACHINE \
             $MACHINE
 
-          eval "$(docker-machine env --shell sh $MACHINE)" &&
+          (
+            eval "$(docker-machine env --shell sh $MACHINE)" &&
 
-          docker run --name runner \
-            -v /docker_machine/machine:/root/.docker/machine \
-            -e DOCKER_MACHINE=$MACHINE \
-            -e repo_token=$repo_token \
-            -e RUNNER_LABELS=$RUNNER_LABELS \
-            -e RUNNER_REPO=$RUNNER_REPO \
-            davidgortega/cml-runner:latest &&
+            docker run --name runner \
+              -v /docker_machine/machine:/root/.docker/machine \
+              -e DOCKER_MACHINE=$MACHINE \
+              -e repo_token=$repo_token \
+              -e RUNNER_LABELS=$RUNNER_LABELS \
+              -e RUNNER_REPO=$RUNNER_REPO \
+              -e RUNNER_IDLE_TIMEOUT=300 \
+              davidgortega/cml-runner:latest &&
 
-          docker-machine rm -f $MACHINE
+            echo 'removing...' &&
+            docker-machine rm -f $MACHINE
+          ) || (docker-machine rm -f $MACHINE && exit 1)
 
-  wait-azure:
-    needs: deploy-azure
+  register-runner:
+    runs-on: [ubuntu-latest]
+    container: docker://davidgortega/cml-runner:latest
 
     steps:
       - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
         run: |
-          echo 'waiting deploy to finish...' 
+          RUNNER_LABELS="azure"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+
+          docker run --name runner \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=10 \
+            -e RUNNER_UNREGISTER=n \
+            -e RUNNER_NAME=runner \
+            davidgortega/cml-runner:latest
 
   ml-azure:
-    needs: wait-azure
+    needs: register-runner
     runs-on: [self-hosted,azure]
 
     steps:
