@@ -122,6 +122,7 @@ jobs:
               -e RUNNER_IDLE_TIMEOUT=60 \
               dvcorg/cml-py3-cloud-runner:latest &&
 
+            echo 'removing...' &&
             docker-machine rm -f $MACHINE
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
