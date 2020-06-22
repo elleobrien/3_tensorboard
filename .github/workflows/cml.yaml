@@ -18,7 +18,7 @@ jobs:
   #       run: |
   #         echo "Deploying..."
 
-  #         RUNNER_LABELS="cml,azure"
+  #         RUNNER_LABELS="azure"
   #         RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
   #         MACHINE="cml$(date +%s)"
 
@@ -123,27 +123,27 @@ jobs:
 
           docker-machine rm -f $MACHINE
 
-  # register-runner:
-  #   runs-on: [ubuntu-latest]
-  #   container: docker://davidgortega/cml-runner:latest
+  register-runner:
+    runs-on: [ubuntu-latest]
+    container: docker://davidgortega/cml-runner:latest
 
-  #   steps:
-  #     - name: deploy
-  #       shell: bash
-  #       env:
-  #         repo_token: ${{ secrets.REPO_TOKEN }} 
-  #       run: |
-  #         RUNNER_LABELS="azure"
-  #         RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+        run: |
+          RUNNER_LABELS="azure"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
-  #         docker run --name runner \
-  #           -e repo_token=$repo_token \
-  #           -e RUNNER_LABELS=$RUNNER_LABELS \
-  #           -e RUNNER_REPO=$RUNNER_REPO \
-  #           -e RUNNER_IDLE_TIMEOUT=10 \
-  #           -e RUNNER_UNREGISTER=n \
-  #           -e RUNNER_NAME=runner \
-  #           davidgortega/cml-runner:latest
+          docker run --name runner \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=1 \
+            -e RUNNER_UNREGISTER=n \
+            -e RUNNER_NAME=runner \
+            davidgortega/cml-runner:latest
 
   ml-azure:
     # needs: register-runner
@@ -175,7 +175,7 @@ jobs:
   #       run: |
   #         echo "Deploying..."
 
-  #         RUNNER_LABELS="cml,aws"
+  #         RUNNER_LABELS="aws"
   #         RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
   #         MACHINE="cml$(date +%s)"
 
@@ -238,7 +238,7 @@ jobs:
   #         echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}' > gce-credentials.json
   #         export GOOGLE_APPLICATION_CREDENTIALS='gce-credentials.json'
 
-  #         RUNNER_LABELS="cml,gce"
+  #         RUNNER_LABELS="gce"
   #         RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
   #         MACHINE="cml$(date +%s)"
 
