@@ -148,7 +148,7 @@ jobs:
   #         sleep 30
 
   ml-azure:
-    needs: register-runner
+    # needs: register-runner
     runs-on: [self-hosted,azure]
 
     steps:
