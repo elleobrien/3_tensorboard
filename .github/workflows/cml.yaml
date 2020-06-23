@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy-azure-gpu:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml-runner:latest
+    container: docker://davidgortega/cml-runner2:latest
 
     steps:
       - name: deploy
@@ -47,7 +47,7 @@ jobs:
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=30 \
-            davidgortega/cml-runner:latest && \
+            davidgortega/cml-runner2:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
