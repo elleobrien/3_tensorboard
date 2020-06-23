@@ -40,38 +40,17 @@ jobs:
           docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
 
 
-          docker run --name runner  -d \
+          docker run --name runner  \
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=$MACHINE \
             -e repo_token=$repo_token \
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
-            -e RUNNER_IDLE_TIMEOUT=120 \
+            -e RUNNER_IDLE_TIMEOUT=30 \
             davidgortega/cml-runner:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
-
-  ml-azure-gpu:
-    needs: deploy-azure-gpu
-    runs-on: [self-hosted,azure]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: cml_run
-        env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }} 
-        run: |
-          echo "Training..."
-          echo 'Hi from azure!' >> report.md
-          nvidia-smi >> report.md
-          cml-send-comment report.md
-
-          pip3 install -r requirements.txt
-          python train.py
-          
-          echo "Trained!"
 
 
   # deploy-azure:
