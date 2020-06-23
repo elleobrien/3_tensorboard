@@ -53,7 +53,7 @@ jobs:
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
   ml-azure-gpu:
-    needs: deploy-azure
+    needs: deploy-azure-gpu
     runs-on: [self-hosted,azure]
 
     steps:
