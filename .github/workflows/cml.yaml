@@ -245,9 +245,11 @@ jobs:
           MACHINE="cml$(date +%s)"
 
           docker-machine create --driver google \
-            --google-machine-type "f1-micro" \
+            --google-machine-type "n1-standard-4" \
             --google-project "cml-project-279709" \
             --google-machine-image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts" \
+            --google-accelerator-type "nvidia-tesla-p100" \
+            --google-accelerator-count 1 \
             $MACHINE
 
           eval "$(docker-machine env --shell sh $MACHINE)"
@@ -258,7 +260,12 @@ jobs:
 
           docker-machine scp -q gce-credentials.json $MACHINE:/docker_machine/gce-credentials.json && \
 
-          docker run --name runner  \
+          docker-machine ssh $MACHINE "sudo apt update && sudo apt install -y ubuntu-drivers-common && sudo ubuntu-drivers autoinstall" && \
+          docker-machine ssh $MACHINE "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - && curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list && sudo apt update && sudo apt install -y nvidia-container-toolkit && \
+          docker-machine restart $MACHINE && \
+          eval "$(docker-machine env --shell sh $MACHINE)" && \
+
+          docker run --name runner --gpus all -d \
             -v /docker_machine/machine:/root/.docker/machine \
             -e DOCKER_MACHINE=$MACHINE \
             -e repo_token=$repo_token \
@@ -272,19 +279,20 @@ jobs:
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
-  # ml-gce:
-  #   needs: deploy-gce
-  #   runs-on: [self-hosted,gce]
+  ml-gce:
+    needs: deploy-gce
+    runs-on: [self-hosted,gce]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: cml_run
-  #       env:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
-  #       run: |
-  #         echo "Training..."
-  #         echo 'Hi from Google Cloud!' >> report.md
-  #         cml-send-comment report.md
-  #         echo "Trained!"
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hi from Google Cloud!' >> report.md
+          nvidia-smi >> report.md
+          cml-send-comment report.md
+          echo "Trained!"
           
