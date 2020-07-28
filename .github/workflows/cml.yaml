@@ -297,8 +297,10 @@ jobs:
   #         cml-send-comment report.md
   #         echo "Trained!"
   run:
-    runs-on: [self-hosted,gpu]
-
+    runs-on: [ubuntu-latest]
+    container:
+      image: docker://davidgortega/cml-python:latest
+      
     steps:
       - uses: actions/checkout@v2
       
