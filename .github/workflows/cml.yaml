@@ -300,7 +300,9 @@ jobs:
     runs-on: [ubuntu-latest]
     container:
       image: docker://davidgortega/cml-python:latest
-      
+      volumes:
+        - /opt/hostedtoolcache:/opt/hostedtoolcache
+
     steps:
       - uses: actions/checkout@v2
       
