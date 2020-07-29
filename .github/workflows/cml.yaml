@@ -298,11 +298,11 @@ jobs:
   #         echo "Trained!"
 
   run:
-    #runs-on: [self-hosted,gpu]
+    runs-on: [self-hosted,gpu]
     
-    runs-on: [ubuntu-latest]
-    container:
-      image: docker://davidgortega/cml-python2
+    # runs-on: [ubuntu-latest]
+    # container:
+    #   image: docker://davidgortega/cml-python2
       # volumes:
       #   - /opt/hostedtoolcache:/opt/hostedtoolcache
 
