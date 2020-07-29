@@ -299,7 +299,7 @@ jobs:
 
   run:
     # docker://davidgortega/cml-pyv3
-    runs-on: [self-hosted,gpu]
+    #runs-on: [self-hosted,gpu]
     
     runs-on: [ubuntu-latest]
     container:
