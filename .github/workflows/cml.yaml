@@ -298,7 +298,7 @@ jobs:
   #         echo "Trained!"
 
   run:
-    # docker://davidgortega/cml-python5
+    # docker://davidgortega/cml-pyv3
     runs-on: [self-hosted,gpu]
     
     # runs-on: [ubuntu-latest]
