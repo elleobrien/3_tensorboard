@@ -303,7 +303,7 @@ jobs:
     
     runs-on: [ubuntu-latest]
     container:
-      image: docker://davidgortega/cml-pyv3
+      image: docker://davidgortega/cml-pyv4
       # volumes:
       #   - /opt/hostedtoolcache:/opt/hostedtoolcache
 
