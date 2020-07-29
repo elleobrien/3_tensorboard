@@ -296,14 +296,20 @@ jobs:
   #         nvidia-smi >> report.md
   #         cml-send-comment report.md
   #         echo "Trained!"
+
   run:
-    runs-on: [self-hosted,gpu]
+    # runs-on: [self-hosted,gpu]
+    runs-on: [ubuntu-latest]
+    container:
+      image: docker://dvcorg/cml:latest
+      #volumes:
+        #- /opt/hostedtoolcache:/opt/hostedtoolcache
 
     steps:
       - uses: actions/checkout@v2
       
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v1
         with:
           python-version: '3.x'
           
