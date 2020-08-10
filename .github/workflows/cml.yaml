@@ -336,33 +336,33 @@ jobs:
           MACHINE="cml$(date +%s)"
 
           (
-          docker-machine create \
-            --driver amazonec2 \
-            --amazonec2-instance-type g3s.xlarge \
-            --amazonec2-vpc-id vpc-XXX \
-            --amazonec2-region eu-west-1 \
-            --amazonec2-zone "a" \
-            --amazonec2-ssh-user ubuntu \
-            --amazonec2-ami ami-062ad6cd7428cb845 \
-            --amazonec2-root-size 100 \
-            $MACHINE
-          eval "$(docker-machine env --shell sh $MACHINE)" && \
+            docker-machine create \
+              --driver azure \
+              --azure-client-id $AZURE_CLIENT_ID \
+              --azure-client-secret $AZURE_CLIENT_SECRET \
+              --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
+              --azure-location "eastus" \
+              --azure-resource-group $MACHINE \
+              --azure-size "Standard_NC6" \
+              --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
+              $MACHINE && \
+            eval "$(docker-machine env --shell sh $MACHINE)" && \
 
-          docker-machine ssh $MACHINE "sudo mkdir -p \
-            /docker_machine && \
-          sudo chmod 777 /docker_machine" && \
-          docker-machine scp -r -q ~/.docker/machine/ \
-            $MACHINE:/docker_machine && \
+            docker-machine ssh $MACHINE "sudo mkdir -p \
+              /docker_machine && \
+            sudo chmod 777 /docker_machine" && \
+            docker-machine scp -r -q ~/.docker/machine/ \
+              $MACHINE:/docker_machine && \
 
-          docker run --name runner --gpus all -d \
-            -v /docker_machine/machine:/root/.docker/machine \
-            -e DOCKER_MACHINE=$MACHINE \
-            -e repo_token=$repo_token \
-            -e RUNNER_LABELS=$RUNNER_LABELS \
-            -e RUNNER_REPO=$RUNNER_REPO \
-            -e RUNNER_IDLE_TIMEOUT=300 \
-            dvcorg/cml-py3:latest && \
-          sleep 20 && echo "Deployed $MACHINE"
+            docker run --name runner --gpus all -d \
+              -v /docker_machine/machine:/root/.docker/machine \
+              -e DOCKER_MACHINE=$MACHINE \
+              -e repo_token=$repo_token \
+              -e RUNNER_LABELS=$RUNNER_LABELS \
+              -e RUNNER_REPO=$RUNNER_REPO \
+              -e RUNNER_IDLE_TIMEOUT=300 \
+              dvcorg/cml-py3:latest && \
+            sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -y -f $MACHINE && exit 1)
 
   train:
