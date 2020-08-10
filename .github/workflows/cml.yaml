@@ -319,7 +319,7 @@ on: [push]
   #       run: python -c "import sys; print(sys.version)"
 
 jobs:
-  deploy-azure-gpu:
+  deploy-gpu:
     runs-on: [ubuntu-latest]
     container: docker://dvcorg/cml-py3:latest
 
@@ -369,13 +369,13 @@ jobs:
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
-            dvcorg/cml-gpu-py3-cloud-runner:latest && \
+            dvcorg/cml-py3:latest && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
-  ml-azure-gpu:
-    needs: deploy-azure-gpu
+  ml-gpu:
+    needs: deploys-gpu
     runs-on: [self-hosted,gpu]
 
     steps:
