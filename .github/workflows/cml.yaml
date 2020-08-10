@@ -318,63 +318,63 @@ on: [push]
   #     - name: Display Python version
   #       run: python -c "import sys; print(sys.version)"
 
-  jobs:
-    deploy-cloud-runner:
-      container: docker://dvcorg/cml
-      steps:
-        - name: deploy
-          env:
-            repo_token: ${{ secrets.REPO_TOKEN }}
-            AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-            AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-            AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          run: |
-            echo "Deploying..."
-            RUNNER_LABELS="cml"
-            RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
-            MACHINE="cml$(date +%s)"
-  
-            (
-            docker-machine create \
-              --driver amazonec2 \
-              --amazonec2-instance-type g3s.xlarge \
-              --amazonec2-vpc-id vpc-XXX \
-              --amazonec2-region eu-west-1 \
-              --amazonec2-zone "a" \
-              --amazonec2-ssh-user ubuntu \
-              --amazonec2-ami ami-062ad6cd7428cb845 \
-              --amazonec2-root-size 100 \
-              $MACHINE
-            eval "$(docker-machine env --shell sh $MACHINE)" && \
-  
-            docker-machine ssh $MACHINE "sudo mkdir -p \
-              /docker_machine && \
-            sudo chmod 777 /docker_machine" && \
-            docker-machine scp -r -q ~/.docker/machine/ \
-              $MACHINE:/docker_machine && \
-  
-            docker run --name runner --gpus all -d \
-              -v /docker_machine/machine:/root/.docker/machine \
-              -e DOCKER_MACHINE=$MACHINE \
-              -e repo_token=$repo_token \
-              -e RUNNER_LABELS=$RUNNER_LABELS \
-              -e RUNNER_REPO=$RUNNER_REPO \
-              -e RUNNER_IDLE_TIMEOUT=300 \
-              dvcorg/cml-py3:latest && \
-            sleep 20 && echo "Deployed $MACHINE"
-            ) || (docker-machine rm -y -f $MACHINE && exit 1)
-  
-    train:
-      needs: deploy-cloud-runner
-      runs-on: [self-hosted,cml]
-      steps:
-        
-        - uses: actions/checkout@v2
-  
-        - name: cml_run
-          env:
-            repo_token: ${{ secrets.REPO_TOKEN }}
-          run: |
-            echo 'Hi from azure!' >> report.md
-            nvidia-smi >> report.md
-            cml-send-comment report.md
+jobs:
+  deploy-cloud-runner:
+    container: docker://dvcorg/cml
+    steps:
+      - name: deploy
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          echo "Deploying..."
+          RUNNER_LABELS="cml"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+          MACHINE="cml$(date +%s)"
+
+          (
+          docker-machine create \
+            --driver amazonec2 \
+            --amazonec2-instance-type g3s.xlarge \
+            --amazonec2-vpc-id vpc-XXX \
+            --amazonec2-region eu-west-1 \
+            --amazonec2-zone "a" \
+            --amazonec2-ssh-user ubuntu \
+            --amazonec2-ami ami-062ad6cd7428cb845 \
+            --amazonec2-root-size 100 \
+            $MACHINE
+          eval "$(docker-machine env --shell sh $MACHINE)" && \
+
+          docker-machine ssh $MACHINE "sudo mkdir -p \
+            /docker_machine && \
+          sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ \
+            $MACHINE:/docker_machine && \
+
+          docker run --name runner --gpus all -d \
+            -v /docker_machine/machine:/root/.docker/machine \
+            -e DOCKER_MACHINE=$MACHINE \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=300 \
+            dvcorg/cml-py3:latest && \
+          sleep 20 && echo "Deployed $MACHINE"
+          ) || (docker-machine rm -y -f $MACHINE && exit 1)
+
+  train:
+    needs: deploy-cloud-runner
+    runs-on: [self-hosted,cml]
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }}
+        run: |
+          echo 'Hi from azure!' >> report.md
+          nvidia-smi >> report.md
+          cml-send-comment report.md
