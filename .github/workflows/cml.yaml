@@ -2,7 +2,7 @@ name: train-my-model
 
 on: [push]
 
-jobs:
+#jobs:
   # deploy-azure-gpu:
   #   runs-on: [ubuntu-latest]
   #   container: docker://dvcorg/cml-py3-cloud-runner:latest
