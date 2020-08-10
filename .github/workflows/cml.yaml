@@ -318,7 +318,6 @@ on: [push]
   #     - name: Display Python version
   #       run: python -c "import sys; print(sys.version)"
 
-
   jobs:
     deploy-cloud-runner:
       container: docker://dvcorg/cml
