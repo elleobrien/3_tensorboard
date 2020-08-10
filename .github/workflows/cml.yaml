@@ -319,63 +319,78 @@ on: [push]
   #       run: python -c "import sys; print(sys.version)"
 
 jobs:
-  deploy-cloud-runner:
+  deploy-azure-gpu:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml
+    container: docker://dvcorg/cml-py3:latest
+
     steps:
       - name: deploy
+        shell: bash
         env:
-          repo_token: ${{ secrets.REPO_TOKEN }}
+          repo_token: ${{ secrets.REPO_TOKEN }} 
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: |
           echo "Deploying..."
-          RUNNER_LABELS="cml"
-          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+
+          RUNNER_LABELS="gpu"
+          RUNNER_REPO="https://github.com/DavidGOrtega/3_tensorboard"
           MACHINE="cml$(date +%s)"
 
           (
             docker-machine create \
-              --driver azure \
-              --azure-client-id $AZURE_CLIENT_ID \
-              --azure-client-secret $AZURE_CLIENT_SECRET \
-              --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
-              --azure-location "eastus" \
-              --azure-resource-group $MACHINE \
-              --azure-size "Standard_NC6" \
-              --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
-              $MACHINE && \
-            eval "$(docker-machine env --shell sh $MACHINE)" && \
+            --driver azure \
+            --azure-client-id $AZURE_CLIENT_ID \
+            --azure-client-secret $AZURE_CLIENT_SECRET \
+            --azure-subscription-id $AZURE_SUBSCRIPTION_ID \
+            --azure-location "eastus" \
+            --azure-resource-group $MACHINE \
+            --azure-size "Standard_NC6" \
+            --azure-image Canonical:UbuntuServer:18.04-LTS:latest \
+            $MACHINE && \
 
-            docker-machine ssh $MACHINE "sudo mkdir -p \
-              /docker_machine && \
-            sudo chmod 777 /docker_machine" && \
-            docker-machine scp -r -q ~/.docker/machine/ \
-              $MACHINE:/docker_machine && \
+          eval "$(docker-machine env --shell sh $MACHINE)" && \
 
-            docker run --name runner -d \
-              -v /docker_machine/machine:/root/.docker/machine \
-              -e DOCKER_MACHINE=$MACHINE \
-              -e repo_token=$repo_token \
-              -e RUNNER_LABELS=$RUNNER_LABELS \
-              -e RUNNER_REPO=$RUNNER_REPO \
-              -e RUNNER_IDLE_TIMEOUT=300 \
-              dvcorg/cml-py3:latest && \
-            sleep 20 && echo "Deployed $MACHINE"
-          ) || (docker-machine rm -y -f $MACHINE && exit 1)
+          docker-machine ssh $MACHINE "sudo mkdir -p /docker_machine && sudo chmod 777 /docker_machine" && \
+          docker-machine scp -r -q ~/.docker/machine/ $MACHINE:/docker_machine && \
 
-  train:
-    needs: deploy-cloud-runner
-    runs-on: [self-hosted,cml]
+          docker-machine ssh $MACHINE "sudo apt update && sudo apt install -y ubuntu-drivers-common && sudo ubuntu-drivers autoinstall" && \
+
+          docker-machine restart $MACHINE && \
+          eval "$(docker-machine env --shell sh $MACHINE)" && \
+
+          docker-machine ssh $MACHINE "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - && curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list && sudo apt update && sudo apt install -y nvidia-container-toolkit && sudo systemctl restart docker" && \
+
+          docker run --name runner --gpus all -d \
+            -v /docker_machine/machine:/root/.docker/machine \
+            -e DOCKER_MACHINE=$MACHINE \
+            -e repo_token=$repo_token \
+            -e RUNNER_LABELS=$RUNNER_LABELS \
+            -e RUNNER_REPO=$RUNNER_REPO \
+            -e RUNNER_IDLE_TIMEOUT=120 \
+            dvcorg/cml-gpu-py3-cloud-runner:latest && \
+
+          sleep 20 && echo "Deployed $MACHINE"
+          ) || (docker-machine rm -f $MACHINE && exit 1)
+
+  ml-azure-gpu:
+    needs: deploy-azure
+    runs-on: [self-hosted,gpu]
+
     steps:
-      
       - uses: actions/checkout@v2
 
       - name: cml_run
         env:
-          repo_token: ${{ secrets.REPO_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
+          echo "Training..."
           echo 'Hi from azure!' >> report.md
           nvidia-smi >> report.md
           cml-send-comment report.md
+
+          pip3 install -r requirements.txt
+          python train.py
+          
+          echo "Trained!"
