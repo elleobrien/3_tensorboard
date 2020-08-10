@@ -375,7 +375,7 @@ jobs:
           ) || (docker-machine rm -f $MACHINE && exit 1)
 
   ml-azure-gpu:
-    needs: deploy-azure
+    needs: deploy-azure-gpu
     runs-on: [self-hosted,gpu]
 
     steps:
@@ -389,8 +389,3 @@ jobs:
           echo 'Hi from azure!' >> report.md
           nvidia-smi >> report.md
           cml-send-comment report.md
-
-          pip3 install -r requirements.txt
-          python train.py
-          
-          echo "Trained!"
