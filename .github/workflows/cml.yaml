@@ -320,9 +320,6 @@ on: [push]
 
 jobs:
   run:
-    env:
-      DEBIAN_FRONTEND: noninteractive
-
     runs-on: [ubuntu-18.04]
     container: docker://davidgortega/cml:noninteractive
     # container: ubuntu:18.04
