@@ -328,6 +328,7 @@ jobs:
 
       - name: cml_run
         run: |
+            printf 'APT::Get::Assume-Yes "true";\nAPT::Get::force-yes "true";' >> /etc/apt/apt.conf.d/90forceyes
             apt-get update && apt-get -y install sudo software-properties-common
             # adduser --disabled-password --gecos '' root
             # adduser root sudo
