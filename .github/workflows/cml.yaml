@@ -321,15 +321,13 @@ on: [push]
 jobs:
   run:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
+    # container: docker://dvcorg/cml-py3:latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: cml_run
-        env:
-          repo_token: ${{ secrets.repo_token }}
-        run: |
-            apt-get update && apt-get -y install sudo
+      #- name: cml_run
+        #run: |
+            #apt-get update && apt-get -y install sudo
             # adduser --disabled-password --gecos '' root
             # adduser root sudo
             # echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -340,13 +338,15 @@ jobs:
           repo_token: ${{ secrets.repo_token }}
         run: |
           # Install miic and dependencies
-          wget -c https://github.com/miicTeam/miic_R_package/archive/v1.4.2.tar.gz
-          tar -xvzf v1.4.2.tar.gz
-          cd miic_R_package-1.4.2
-          R --silent -e "install.packages(c(\"igraph\", \"ppcor\", \"scales\", \"Rcpp\"))"
-          R CMD INSTALL . --preclean
-          cd ..
+          # wget -c https://github.com/miicTeam/miic_R_package/archive/v1.4.2.tar.gz
+          # tar -xvzf v1.4.2.tar.gz
+          # cd miic_R_package-1.4.2
+          # R --silent -e "install.packages(c(\"igraph\", \"ppcor\", \"scales\", \"Rcpp\"))"
+          # R CMD INSTALL . --preclean
+          # cd ..
 
           # Write your CML report
-          echo "## Model Metrics" > report.md
-          cml-send-comment report.md
+          # echo "## Model Metrics" > report.md
+          # cml-send-comment report.md
+
+          echo 'Works'
