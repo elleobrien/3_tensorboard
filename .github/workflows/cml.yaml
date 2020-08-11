@@ -330,7 +330,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-            #printf 'APT::Get::Assume-Yes "true";\nAPT::Get::force-yes "true";' >> /etc/apt/apt.conf.d/90forceyes
+            echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
             apt-get update && apt-get -y install sudo software-properties-common
             # adduser --disabled-password --gecos '' root
             # adduser root sudo
