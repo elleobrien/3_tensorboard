@@ -328,13 +328,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: cml_run
+      - name: apt
         run: |
             echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
+
+      - name: sudo
+        run: |
             apt-get update && apt-get install sudo software-properties-common
-            # adduser --disabled-password --gecos '' root
-            # adduser root sudo
-            # echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
       - uses: r-lib/actions/setup-r@master
       - name: cml_run
