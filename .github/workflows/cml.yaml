@@ -331,8 +331,9 @@ jobs:
 
       - name: apt
         run: |
-            echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
-
+            #echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
+            echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+            
       - name: sudo
         run: |
             apt-get update && apt-get install sudo software-properties-common tzdata
