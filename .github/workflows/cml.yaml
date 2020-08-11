@@ -324,16 +324,15 @@ jobs:
     container: docker://dvcorg/cml-py3:latest
     steps:
       - uses: actions/checkout@v2
+
+      run: |
+          apt-get update && apt-get -y install sudo
+
       - uses: r-lib/actions/setup-r@master
       - name: cml_run
         env:
           repo_token: ${{ secrets.repo_token }}
         run: |
-          apt-get update && apt-get -y install sudo
-          adduser --disabled-password --gecos '' root
-          adduser root sudo
-          echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
           # Install miic and dependencies
           wget -c https://github.com/miicTeam/miic_R_package/archive/v1.4.2.tar.gz
           tar -xvzf v1.4.2.tar.gz
