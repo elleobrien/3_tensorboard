@@ -329,13 +329,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: apt
-      #   run: |
-      #       echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
+      - name: apt
+        run: |
+            echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
 
       - name: sudo
         run: |
-            apt-get update && apt-get install -y sudo software-properties-common tzdata
+            apt-get update && apt-get install sudo software-properties-common tzdata
             # ln -fs /usr/share/zoneinfo/US/Pacific-New /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
 
       - uses: r-lib/actions/setup-r@master
