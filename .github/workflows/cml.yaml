@@ -335,7 +335,7 @@ jobs:
 
       - name: sudo
         run: |
-            apt-get update && apt-get install sudo software-properties-common tzdata
+            apt-get update && apt-get install software-properties-common tzdata
             # ln -fs /usr/share/zoneinfo/US/Pacific-New /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
 
       - uses: r-lib/actions/setup-r@master
