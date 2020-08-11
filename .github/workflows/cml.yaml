@@ -321,7 +321,7 @@ on: [push]
 jobs:
   run:
     runs-on: [ubuntu-18.04]
-    container: docker://davidgortega/cml:noninteractive
+    container: docker://dvcorg/cml-test
     # container: ubuntu:18.04
     steps:
       - uses: actions/checkout@v2
