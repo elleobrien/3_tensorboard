@@ -322,6 +322,7 @@ jobs:
   run:
     runs-on: [ubuntu-18.04]
     # container: docker://dvcorg/cml-py3:latest
+    container: ubuntu:18.04
     steps:
       - uses: actions/checkout@v2
 
@@ -344,9 +345,7 @@ jobs:
           # R --silent -e "install.packages(c(\"igraph\", \"ppcor\", \"scales\", \"Rcpp\"))"
           # R CMD INSTALL . --preclean
           # cd ..
-
           # Write your CML report
           # echo "## Model Metrics" > report.md
           # cml-send-comment report.md
-
           echo 'Works'
