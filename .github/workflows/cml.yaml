@@ -325,8 +325,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      run: |
-          apt-get update && apt-get -y install sudo
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.repo_token }}
+        run: |
+            apt-get update && apt-get -y install sudo
+            # adduser --disabled-password --gecos '' root
+            # adduser root sudo
+            # echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
       - uses: r-lib/actions/setup-r@master
       - name: cml_run
