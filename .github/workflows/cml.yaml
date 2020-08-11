@@ -330,6 +330,7 @@ jobs:
           repo_token: ${{ secrets.repo_token }}
         run: |
           apt-get update && apt-get -y install sudo
+          useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 
           # Install miic and dependencies
           wget -c https://github.com/miicTeam/miic_R_package/archive/v1.4.2.tar.gz
