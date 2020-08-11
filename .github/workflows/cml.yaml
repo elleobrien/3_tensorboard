@@ -322,8 +322,7 @@ jobs:
   run:
     env:
       DEBIAN_FRONTEND: noninteractive
-      DEBCONF_NONINTERACTIVE_SEEN: true
-  
+
     runs-on: [ubuntu-18.04]
     # container: docker://dvcorg/cml-py3:latest
     container: ubuntu:18.04
@@ -333,7 +332,7 @@ jobs:
       - name: apt
         run: |
             echo 'APT::Get::Assume-Yes "true";\nAPT::Get::allow-downgrades "true";\nAPT::Get::allow-remove-essential "true";\nAPT::Get::allow-change-held-packages "true";' >> /etc/apt/apt.conf.d/90forceyes
-            
+
       - name: sudo
         run: |
             apt-get update && apt-get install sudo software-properties-common tzdata
