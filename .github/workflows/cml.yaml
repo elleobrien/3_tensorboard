@@ -384,6 +384,6 @@ jobs:
           path: terraform.tfstate
 
       - name: cml_run
-          run: |
-            terraform destroy -auto-approve  
-          
+        run: |
+          terraform destroy -auto-approve  
+        
