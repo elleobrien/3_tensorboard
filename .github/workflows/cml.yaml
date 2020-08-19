@@ -389,5 +389,6 @@ jobs:
 
       - name: cml_run
         run: |
+          terraform init  
           terraform destroy -auto-approve  
         
