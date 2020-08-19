@@ -374,15 +374,16 @@ jobs:
           terraform apply -auto-approve
 
   terraform-ends:
+    runs-on: [ubuntu-18.04]
     needs: terraform
+    steps:
+      - uses: hashicorp/setup-terraform@v1
 
-    - uses: hashicorp/setup-terraform@v1
+      - uses: actions/cache@v2
+        with:
+          path: terraform.tfstate
 
-    - uses: actions/cache@v2
-      with:
-        path: terraform.tfstate
-
-    - name: cml_run
-        run: |
-          terraform destroy -auto-approve  
+      - name: cml_run
+          run: |
+            terraform destroy -auto-approve  
           
