@@ -363,7 +363,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
-
       - uses: actions/cache@v2
         with:
           path: terraform.tfstate
@@ -381,7 +380,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
-
       - uses: actions/cache@v2
         with:
           path: terraform.tfstate
@@ -389,6 +387,7 @@ jobs:
 
       - name: cml_run
         run: |
-          terraform init  
-          terraform destroy -auto-approve  
+          cat terraform.tfstate
+          # terraform init  
+          # terraform destroy -auto-approve  
         
