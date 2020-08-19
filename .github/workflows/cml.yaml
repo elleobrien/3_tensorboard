@@ -361,6 +361,7 @@ jobs:
   terraform:
     runs-on: [ubuntu-18.04]
     steps:
+      - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
 
       - uses: actions/cache@v2
@@ -378,6 +379,7 @@ jobs:
     runs-on: [ubuntu-18.04]
     needs: terraform
     steps:
+      - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
 
       - uses: actions/cache@v2
