@@ -353,42 +353,84 @@ on: [push]
 #           # cml-send-comment report.md
 #           echo 'Works'
 
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+# env:
+#   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-jobs:
-  terraform:
-    runs-on: [ubuntu-18.04]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-      - uses: actions/cache@v2
-        with:
-          path: terraform.tfstate
-          key: terraform
+# jobs:
+#   terraform:
+#     runs-on: [ubuntu-18.04]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: hashicorp/setup-terraform@v1
+#       - uses: actions/cache@v2
+#         with:
+#           path: terraform.tfstate
+#           key: terraform
 
-      - name: cml_run
-        run: |
-          rm terraform.tfstate
-          terraform init  
-          terraform plan --out plan
-          terraform apply -auto-approve
+#       - name: cml_run
+#         run: |
+#           rm terraform.tfstate
+#           terraform init  
+#           terraform plan --out plan
+#           terraform apply -auto-approve
 
-  terraform-ends:
-    runs-on: [ubuntu-18.04]
-    needs: terraform
-    steps:
-      - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-      - uses: actions/cache@v2
-        with:
-          path: terraform.tfstate
-          key: terraform
+#   terraform-ends:
+#     runs-on: [ubuntu-18.04]
+#     needs: terraform
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: hashicorp/setup-terraform@v1
+#       - uses: actions/cache@v2
+#         with:
+#           path: terraform.tfstate
+#           key: terraform
 
-      - name: cml_run
-        run: |
-          # cat terraform.tfstate
-          terraform init  
-          terraform destroy -auto-approve  
+#       - name: cml_run
+#         run: |
+#           terraform init  
+#           terraform destroy -auto-approve  
         
+jobs:
+  deploy:
+    runs-on: [ubuntu-latest]
+    container: docker://davidgortega/cml:tf
+
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        run: |
+          echo "Deploying..."
+
+          RUNNER_LABELS="cml"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+
+          cml-cloud-runner \ 
+            --instance_ami ami-03ba3948f6c37a4b0 \
+            --region us-west-1 \
+            --repo_token ${repo_token} \
+            --runner_repo ${RUNNER_REPO} \
+            --runner_labels ${RUNNER_LABELS} \
+            --runner_idle_timeout=120
+
+  train:
+    needs: deploy
+    runs-on: [self-hosted,cml]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hi from cml!' >> report.md
+          # nvidia-smi >> report.md
+          cml-send-comment report.md
+
+          echo "Trained!"
