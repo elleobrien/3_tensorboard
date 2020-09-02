@@ -409,7 +409,7 @@ jobs:
           RUNNER_LABELS="cml"
           RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
-          cloud-runner-entrypoint \ 
+          cml-cloud-runner \ 
             --instance_ami ami-03ba3948f6c37a4b0 \
             --region us-west-1 \
             --repo_token=$repo_token \
