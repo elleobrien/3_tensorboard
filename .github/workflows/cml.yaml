@@ -412,7 +412,7 @@ jobs:
           cml-cloud-runner \ 
             --instance_ami ami-03ba3948f6c37a4b0 \
             --region us-west-1 \
-            --repo_token=$repo_token \
+            --repo_token=de0cd8271df20fdc872ff802c1cd004eaadc6c14 \
             --runner_repo=$RUNNER_REPO \
             --runner_labels=$RUNNER_LABELS \
             --runner_idle_timeout=120
