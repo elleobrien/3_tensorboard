@@ -412,9 +412,9 @@ jobs:
           cloud-runner-entrypoint \ 
             --instance_ami ami-03ba3948f6c37a4b0 \
             --region us-west-1 \
-            --repo_token=${repo_token} \
-            --runner_repo=${RUNNER_REPO} \
-            --runner_labels=${RUNNER_LABELS} \
+            --repo_token=$repo_token \
+            --runner_repo=$RUNNER_REPO \
+            --runner_labels=$RUNNER_LABELS \
             --runner_idle_timeout=120
 
   train:
