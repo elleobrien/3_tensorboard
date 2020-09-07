@@ -409,9 +409,9 @@ jobs:
           RUNNER_LABELS="cml"
           RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
-          ls
-          which terraform
-          ls ~/.terraform.d/plugins/github.com/davidgortega/davidgortega/0.1/
+          # ls
+          # which terraform
+          # ls ~/.terraform.d/plugins/github.com/davidgortega/davidgortega/0.1/
 
 
           cml-cloud-runner \
