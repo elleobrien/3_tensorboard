@@ -393,7 +393,7 @@ jobs:
         
   deploy-tf:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:tf
+    container: docker://davidgortega/cml:tf2
 
     steps:
       - name: deploy
@@ -414,7 +414,8 @@ jobs:
           --repo_token=${repo_token} \
           --runner_repo=$RUNNER_REPO \
           --runner_labels=$RUNNER_LABELS \
-          --runner_idle_timeout=120
+          --runner_idle_timeout=120 \ 
+          --cml_image "davidgortega/cml:tf2"
 
   train:
     needs: deploy-tf
