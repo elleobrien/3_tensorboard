@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy-azure-gpu:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
+    container: docker://davidgortega/cml:reorder
 
     steps:
       - name: deploy
@@ -53,7 +53,7 @@ jobs:
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
-            dvcorg/cml-py3:latest && \
+            davidgortega/cml:reorder && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
@@ -74,8 +74,8 @@ jobs:
           nvidia-smi >> report.md
           cml-send-comment report.md
 
-          pip3 install -r requirements.txt
-          python train.py
+          # pip3 install -r requirements.txt
+          # python train.py
           
           echo "Trained!"
 
