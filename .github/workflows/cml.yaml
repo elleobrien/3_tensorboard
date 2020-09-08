@@ -391,7 +391,7 @@ jobs:
 #           terraform init  
 #           terraform destroy -auto-approve  
         
-  deploy-f:
+  deploy-tf:
     runs-on: [ubuntu-latest]
     container: docker://davidgortega/cml:tf
 
