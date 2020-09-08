@@ -5,7 +5,7 @@ on: [push]
 jobs:
   deploy-azure-gpu:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:reorder
+    container: docker://davidgortega/cml:tf
 
     steps:
       - name: deploy
@@ -53,7 +53,7 @@ jobs:
             -e RUNNER_LABELS=$RUNNER_LABELS \
             -e RUNNER_REPO=$RUNNER_REPO \
             -e RUNNER_IDLE_TIMEOUT=120 \
-            davidgortega/cml:reorder && \
+            davidgortega/cml:tf && \
 
           sleep 20 && echo "Deployed $MACHINE"
           ) || (docker-machine rm -f $MACHINE && exit 1)
@@ -391,51 +391,45 @@ jobs:
 #           terraform init  
 #           terraform destroy -auto-approve  
         
-  # deploy:
-  #   runs-on: [ubuntu-latest]
-  #   container: docker://davidgortega/cml:tf
+  deploy-f:
+    runs-on: [ubuntu-latest]
+    container: docker://davidgortega/cml:tf
 
-  #   steps:
-  #     - name: deploy
-  #       shell: bash
-  #       env:
-  #         repo_token: ${{ secrets.REPO_TOKEN }} 
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       run: |
-  #         echo "Deploying..."
+    steps:
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.REPO_TOKEN }} 
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        run: |
+          echo "Deploying..."
 
-  #         RUNNER_LABELS="cml"
-  #         RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
+          RUNNER_LABELS="tf"
+          RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
-  #         # ls
-  #         # which terraform
-  #         # ls ~/.terraform.d/plugins/github.com/davidgortega/davidgortega/0.1/
+          test-cml-cloud-runner \
+          --instance_ami ami-03ba3948f6c37a4b0 \
+          --region us-west-1 \
+          --repo_token=${repo_token} \
+          --runner_repo=$RUNNER_REPO \
+          --runner_labels=$RUNNER_LABELS \
+          --runner_idle_timeout=120
 
+  train:
+    needs: deploy-tf
+    runs-on: [self-hosted,tf]
 
-  #         cml-cloud-runner \
-  #         --instance_ami ami-03ba3948f6c37a4b0 \
-  #         --region us-west-1 \
-  #         --repo_token=${repo_token} \
-  #         --runner_repo=$RUNNER_REPO \
-  #         --runner_labels=$RUNNER_LABELS \
-  #         --runner_idle_timeout=120
+    steps:
+      - uses: actions/checkout@v2
 
-  # train:
-  #   #needs: deploy
-  #   #runs-on: [self-hosted,cml]
-  #   runs-on: [ubuntu-latest]
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          echo "Training..."
+          echo 'Hi from cml!' >> report.md
+          # nvidia-smi >> report.md
+          cml-send-comment report.md
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - name: cml_run
-  #       env:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }} 
-  #       run: |
-  #         echo "Training..."
-  #         echo 'Hi from cml!' >> report.md
-  #         # nvidia-smi >> report.md
-  #         cml-send-comment report.md
-
-  #         echo "Trained!"
+          echo "Trained!"
