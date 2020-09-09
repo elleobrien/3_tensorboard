@@ -47,7 +47,7 @@ jobs:
 
   #         # docker-machine ssh $MACHINE "curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - && curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list && sudo apt update && sudo apt install -y nvidia-container-toolkit && sudo systemctl restart docker" && \
 
-  #         docker run --name runner -d \
+  #         docker run --name runner --gpus all -d \
   #           -v /docker_machine/machine:/root/.docker/machine \
   #           -e DOCKER_MACHINE=$MACHINE \
   #           -e repo_token=$repo_token \
@@ -72,7 +72,7 @@ jobs:
   #       run: |
   #         echo "Training..."
   #         echo 'Hi from azure!' >> report.md
-  #         # nvidia-smi >> report.md
+  #         nvidia-smi >> report.md
   #         cml-send-comment report.md
 
   #         # pip3 install -r requirements.txt
@@ -394,7 +394,7 @@ jobs:
         
   deploy-tf:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:tf3
+    container: docker://dvcorg/cml:latest
 
     steps:
       - name: deploy
@@ -416,7 +416,6 @@ jobs:
           --runner_repo=$RUNNER_REPO \
           --runner_labels=$RUNNER_LABELS \
           --runner_idle_timeout=120 \
-          --cml_image "davidgortega/cml:tf3"
 
   train:
     needs: deploy-tf
