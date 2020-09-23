@@ -410,6 +410,7 @@ jobs:
           RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
           test-cml-cloud-runner \
+          --labels=tf \
           --region us-west-1 \
           --idle_timeout=120 \
           --image=davidgortega/cml:cloud
