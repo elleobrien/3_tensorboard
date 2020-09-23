@@ -394,7 +394,7 @@ jobs:
         
   deploy-tf:
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml:latest
+    container: docker://davidgortega/cml:cloud
 
     steps:
       - name: deploy
@@ -410,12 +410,9 @@ jobs:
           RUNNER_REPO="https://github.com/${GITHUB_REPOSITORY}"
 
           test-cml-cloud-runner \
-          --instance_ami ami-03ba3948f6c37a4b0 \
           --region us-west-1 \
-          --repo_token=${repo_token} \
-          --runner_repo=$RUNNER_REPO \
-          --runner_labels=$RUNNER_LABELS \
-          --runner_idle_timeout=120 \
+          --idle_timeout=120 \
+          --image=davidgortega/cml:cloud
 
   train:
     needs: deploy-tf
