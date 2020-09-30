@@ -392,29 +392,29 @@ jobs:
 #           terraform init  
 #           terraform destroy -auto-approve  
         
-  deploy-tf:
-    runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:cloud
+  # deploy-tf:
+  #   runs-on: [ubuntu-latest]
+  #   container: docker://davidgortega/cml:cloud
 
-    steps:
-      - name: deploy
-        shell: bash
-        env:
-          repo_token: ${{ secrets.REPO_TOKEN }} 
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        run: |
-          echo "Deploying..."
+  #   steps:
+  #     - name: deploy
+  #       shell: bash
+  #       env:
+  #         repo_token: ${{ secrets.REPO_TOKEN }} 
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       run: |
+  #         echo "Deploying..."
           
-          test-cml-cloud-runner \
-          --labels=tf \
-          --region us-west-1 \
-          --idle-timeout=120 \
-          --rsa-private-key="-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEAxfp/Zy6zivfON+pFDWriHDGbMuKhsJT4XKq8PESxads7RvDf\ndl8qucthgXBGfbENRa+QoLqcOxTbA2mS09C+61otq8ZqqgX1Ry7MGy4aAjs1Stkw\nMAXfTueIw45j2Xg3yHYEUp1v8BpgUU/p8n+8s1lS9IwJlGhnfZi/5ISOE1La2coP\n/OA9iQpiQjSieF/dzN6N7Yqi88Qxe4FWv649oKJ3F3FFzIotP2mHsyzA9ogpBmIy\nFO95XUSsgnjJpjIcT33wfF53F2qjyh1HfGbsC4t7bwObo9kRpVNc51QXPvIuEDG5\nPet5LX9BiDFUQ/b1hropQzkVxH0KqFEL/8QhwQIDAQABAoIBAQCGXwOTw8XGf3Su\nzMl7Vt0Kp7yfp+R4VlPPiW5jNXh40XyFJL12uRblrZ2LXenqK35HmuZ9wMqC6x/P\nTBuEujyqvrUaznvc1FhqrN+JXxv2AbulBo5HOeUbx9gyanVox8iMvVUnwYWVIEHZ\nTnUJyxsHW4wLQPTLjqUXQNKVRkar47FFwYtzYaRjxrIXpNWezPAuAMO4iHJkb/RK\nIQm0zQFcLcb6U5o5IiTf5A9V5ycg9V+nwb0c0boNoUIeElmQsB9gXLIurl9o6hRi\nKF5QItiyoaMLKb1sZ9EeevIats9tIRKGHp8B5CHk8FJIonDenr9Jw2iGzxkCqLwc\nsFZwDYDVAoGBAO+og80e6AxdIjgZZD55D2L4RNU043l/ODxuJjzedfierArIA9sP\nBUlrHVgZ1CPjbtZjRkP/5ejMNyIZGJBt4Kajk7eTF2jasT/OPoJ5CDIoVr/AbsbX\nI6FqdzPxaCMlVJ66L/HH2l2n5YfEzeN2AUsNvqK+aVFGhTt0dMwcsIgrAoGBANN6\na0/6XY4d3RG85b80ACjQAJk6DazXyGOcQGFd6kGJQym0N0778zrZRUFarhQ/jjJ8\ny0VMzouRqUGxIracGVtg8khFFo+r5s81eGdZW8lAV276F3ppj7ciElqeeI3J/obR\nKzdhg5NCgR1mDo8fd8mJXR8hQ9FZyT6t/YIt/7vDAoGBANnQ4tmO+YAjNXKfQUi2\nZpGg646LnyNRyR7DTeWMmtP4Ao1Z9IcoQ7nSrLzh3LkxgA9B8x7ieWb4FDPdc0Hx\nW3iYuyzhdylJekdvf8i9kAFmQFHO59+4sR2H0gdXpTosN5h7yA+LgKAWdLrM2AOf\nwNUiDN2FCdtgqL68vVq1yIw5AoGATQgKjtdjvKCkJhHonf0TEcqybR34XT08gQwp\nZ04ORlD5Zfd/LgYYUxdRYrzlK/r6kOlkIZoYoj4sqQEc4+d4VRC7MBf6X9r99/xC\nH2MtS+Fj98ihRLWu48ZFaTzQLNWnIPSQCVw70SgoX80NAJU1zPN8OBql2VwbMfmu\nnfyjaoECgYEAoerb/XumS3glUyHbgQnpEC8IG3bMG1zUlWC3tlENgfOY/5/KOINp\nhNksXbiB0jVtneJj1+ZEwiUshrsbFmayRmi4yyUigSBYnC9vaQmsRlkyJDLj+paD\nvujfUmH4XxpZHvjCPgLcRtpJH7Cd3qJtX6pU4vW5QoJVdrNZA/RSvBY=\n-----END RSA PRIVATE KEY-----" \
-          --image=davidgortega/cml:cloud
+  #         test-cml-cloud-runner \
+  #         --labels=tf \
+  #         --region us-west-1 \
+  #         --idle-timeout=120 \
+  #         --rsa-private-key="-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEAxfp/Zy6zivfON+pFDWriHDGbMuKhsJT4XKq8PESxads7RvDf\ndl8qucthgXBGfbENRa+QoLqcOxTbA2mS09C+61otq8ZqqgX1Ry7MGy4aAjs1Stkw\nMAXfTueIw45j2Xg3yHYEUp1v8BpgUU/p8n+8s1lS9IwJlGhnfZi/5ISOE1La2coP\n/OA9iQpiQjSieF/dzN6N7Yqi88Qxe4FWv649oKJ3F3FFzIotP2mHsyzA9ogpBmIy\nFO95XUSsgnjJpjIcT33wfF53F2qjyh1HfGbsC4t7bwObo9kRpVNc51QXPvIuEDG5\nPet5LX9BiDFUQ/b1hropQzkVxH0KqFEL/8QhwQIDAQABAoIBAQCGXwOTw8XGf3Su\nzMl7Vt0Kp7yfp+R4VlPPiW5jNXh40XyFJL12uRblrZ2LXenqK35HmuZ9wMqC6x/P\nTBuEujyqvrUaznvc1FhqrN+JXxv2AbulBo5HOeUbx9gyanVox8iMvVUnwYWVIEHZ\nTnUJyxsHW4wLQPTLjqUXQNKVRkar47FFwYtzYaRjxrIXpNWezPAuAMO4iHJkb/RK\nIQm0zQFcLcb6U5o5IiTf5A9V5ycg9V+nwb0c0boNoUIeElmQsB9gXLIurl9o6hRi\nKF5QItiyoaMLKb1sZ9EeevIats9tIRKGHp8B5CHk8FJIonDenr9Jw2iGzxkCqLwc\nsFZwDYDVAoGBAO+og80e6AxdIjgZZD55D2L4RNU043l/ODxuJjzedfierArIA9sP\nBUlrHVgZ1CPjbtZjRkP/5ejMNyIZGJBt4Kajk7eTF2jasT/OPoJ5CDIoVr/AbsbX\nI6FqdzPxaCMlVJ66L/HH2l2n5YfEzeN2AUsNvqK+aVFGhTt0dMwcsIgrAoGBANN6\na0/6XY4d3RG85b80ACjQAJk6DazXyGOcQGFd6kGJQym0N0778zrZRUFarhQ/jjJ8\ny0VMzouRqUGxIracGVtg8khFFo+r5s81eGdZW8lAV276F3ppj7ciElqeeI3J/obR\nKzdhg5NCgR1mDo8fd8mJXR8hQ9FZyT6t/YIt/7vDAoGBANnQ4tmO+YAjNXKfQUi2\nZpGg646LnyNRyR7DTeWMmtP4Ao1Z9IcoQ7nSrLzh3LkxgA9B8x7ieWb4FDPdc0Hx\nW3iYuyzhdylJekdvf8i9kAFmQFHO59+4sR2H0gdXpTosN5h7yA+LgKAWdLrM2AOf\nwNUiDN2FCdtgqL68vVq1yIw5AoGATQgKjtdjvKCkJhHonf0TEcqybR34XT08gQwp\nZ04ORlD5Zfd/LgYYUxdRYrzlK/r6kOlkIZoYoj4sqQEc4+d4VRC7MBf6X9r99/xC\nH2MtS+Fj98ihRLWu48ZFaTzQLNWnIPSQCVw70SgoX80NAJU1zPN8OBql2VwbMfmu\nnfyjaoECgYEAoerb/XumS3glUyHbgQnpEC8IG3bMG1zUlWC3tlENgfOY/5/KOINp\nhNksXbiB0jVtneJj1+ZEwiUshrsbFmayRmi4yyUigSBYnC9vaQmsRlkyJDLj+paD\nvujfUmH4XxpZHvjCPgLcRtpJH7Cd3qJtX6pU4vW5QoJVdrNZA/RSvBY=\n-----END RSA PRIVATE KEY-----" \
+  #         --image=davidgortega/cml:cloud
 
   train:
-    needs: deploy-tf
+    #needs: deploy-tf
     runs-on: [self-hosted,tf]
 
     steps:
