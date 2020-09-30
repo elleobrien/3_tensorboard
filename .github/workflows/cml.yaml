@@ -428,6 +428,6 @@ jobs:
           echo 'Hi from cml!' >> report.md
           # nvidia-smi >> report.md
           cml-send-comment report.md
-          sleep(600)
+          sleep 600 
 
           echo "Trained!"
