@@ -416,6 +416,8 @@ jobs:
   train:
     needs: deploy-tf
     runs-on: [self-hosted,tf]
+    #runs-on: [ubuntu-18.04]
+    container: docker://dvcorg/cml-test
 
     steps:
       - uses: actions/checkout@v2
@@ -425,9 +427,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           echo "Training..."
-          echo 'Hi from cml!' >> report.md
+          echo 'Hi from cml! END message' >> report.md
           # nvidia-smi >> report.md
           cml-send-comment report.md
-          sleep 120 
+          # sleep 120 
 
           echo "Trained!"
