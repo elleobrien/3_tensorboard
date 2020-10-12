@@ -417,8 +417,6 @@ jobs:
     needs: deploy-tf
     runs-on: [self-hosted,tf]
     #runs-on: [ubuntu-18.04]
-    container: docker://dvcorg/cml-test
-
     steps:
       - uses: actions/checkout@v2
 
