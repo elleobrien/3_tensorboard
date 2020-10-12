@@ -425,9 +425,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           echo "Training..."
+          sleep 600 
           echo 'Hi from cml! END message' >> report.md
           # nvidia-smi >> report.md
-          cml-send-comment report.md
-          # sleep 120 
 
+          cml-send-comment report.md
           echo "Trained!"
