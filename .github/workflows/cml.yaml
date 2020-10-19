@@ -394,7 +394,7 @@ jobs:
         
   deploy-tf:
     runs-on: [ubuntu-latest]
-    container: docker://davidgortega/cml:cloud
+    container: docker://davidgortega/cml:contexts
 
     steps:
       - name: deploy
