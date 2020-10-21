@@ -7,12 +7,6 @@ jobs:
     runs-on: [ubuntu-latest]
     container: docker://dvcorg/cml:latest
 
-    if: | 
-      github.event.issue.pull_request != null && (
-        contains(github.event.comment.body, '/cml-cloud-runner') ||
-        contains(github.event.comment.body, '/cml-publish')
-      )   
-
     steps:
       - name: Fetch PR
         id: chatops
