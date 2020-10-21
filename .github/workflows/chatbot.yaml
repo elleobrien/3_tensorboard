@@ -17,13 +17,14 @@ jobs:
           github-token: ${{ secrets.repo_token }}
           script: |
             github.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.issue.number
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.issue.number
             }).then( (pr) => {
-              console.log(`::set-output name=SHA::${pr.data.head.sha}`)
-              console.log(`::set-output name=COMMAND::${github.event.comment.body}`)
-            )})
+                // Get latest SHA of current branch
+                var SHA = pr.data.head.sha
+                console.log(`::set-output name=SHA::${SHA}`)
+            })
             
       - name: test
         env:
