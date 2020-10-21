@@ -6,7 +6,7 @@ jobs:
   chatbot:
     #runs-on: [ubuntu-latest]
     runs-on: [self-hosted, test,unregister]
-    container: docker://dvcorg/cml:latest
+    #container: docker://dvcorg/cml:latest
 
     steps:
       - name: Fetch PR
