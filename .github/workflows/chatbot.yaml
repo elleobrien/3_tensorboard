@@ -31,5 +31,5 @@ jobs:
         env:
           repo_token: ${{ secrets.repo_token }}
         run: |
-          ${steps.chatops.outputs.COMMAND} > report.md
+          ${{steps.chatops.outputs.COMMAND}} > report.md
           cml-send-comment report.md --commit-sha ${{ steps.chatops.outputs.SHA }}
