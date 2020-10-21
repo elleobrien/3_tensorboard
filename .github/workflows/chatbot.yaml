@@ -33,4 +33,5 @@ jobs:
           repo_token: ${{ secrets.repo_token }}
         run: |
           ${{steps.chatops.outputs.COMMAND}} > report.md
+          cat report.md
           cml-send-comment report.md
