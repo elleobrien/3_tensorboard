@@ -24,6 +24,7 @@ jobs:
                 // Get latest SHA of current branch
                 var SHA = pr.data.head.sha
                 console.log(`::set-output name=SHA::${SHA}`)
+                console.log(`::set-output name=COMMAND::${github.event.comment.body}`)
             })
             
       - name: test
