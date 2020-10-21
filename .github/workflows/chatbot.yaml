@@ -8,7 +8,7 @@ jobs:
     container: docker://dvcorg/cml:latest
 
     if: | 
-      github.event.issue.pull_request != null && (
+      (
         contains(github.event.comment.body, '/cml-cloud-runner') ||
         contains(github.event.comment.body, '/cml-publish')
       )   
