@@ -33,6 +33,9 @@ jobs:
           repo_token: ${{ secrets.repo_token }}
         run: |
           ${{steps.chatops.outputs.COMMAND}} > report.md
+          #printenv
+          echo ${{ steps.chatops.outputs.SHA }} >> report.md
+          echo ${{ CI_PROJECT_PATH }} >> report.md
           cat report.md
-          printenv
-          #cml-send-comment report.md
+          #cml-send-comment report.md --commit-sha ${{ steps.chatops.outputs.SHA }}
+
