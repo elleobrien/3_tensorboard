@@ -37,5 +37,5 @@ jobs:
           echo ${{ steps.chatops.outputs.SHA }} >> report.md
           echo $CI_PROJECT_PATH >> report.md
           cat report.md
-          #cml-send-comment report.md --commit-sha ${{ steps.chatops.outputs.SHA }}
+          cml-send-comment --commit-sha ${{ steps.chatops.outputs.SHA }} report.md
 
