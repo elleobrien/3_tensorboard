@@ -34,4 +34,5 @@ jobs:
         run: |
           ${{steps.chatops.outputs.COMMAND}} > report.md
           cat report.md
+          printenv
           #cml-send-comment report.md
