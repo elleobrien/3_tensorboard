@@ -4,34 +4,38 @@ on: [issue_comment]
 
 jobs:
   chatbot:
-    runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml:latest
-
-    if: | 
-      (github.event.issue.pull_request != null) && (
-        contains(github.event.comment.body, '/cml-cloud-runner' ||
-        contains(github.event.comment.body, '/cml-publish'
-      ))   
+    #runs-on: [ubuntu-latest]
+    runs-on: [self-hosted, test,unregister]
+    #container: docker://dvcorg/cml:latest
 
     steps:
       - name: Fetch PR
         id: chatops
         uses: actions/github-script@v1
+        env:
+            COMMAND: ${{github.event.comment.body}}
         with:
           github-token: ${{ secrets.repo_token }}
           script: |
             github.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.issue.number
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.issue.number
             }).then( (pr) => {
-              console.log(`::set-output name=SHA::${pr.data.head.sha}`
-              console.log(`::set-output name=COMMAND::${github.event.comment.body}`
-            )})
+                // Get latest SHA of current branch
+                var SHA = pr.data.head.sha
+                console.log(`::set-output name=SHA::${SHA}`)
+                console.log(`::set-output name=COMMAND::${process.env.COMMAND}`)
+            })
             
       - name: test
         env:
           repo_token: ${{ secrets.repo_token }}
         run: |
-          ${steps.chatops.outputs.COMMAND} > report.md
-          cml-send-comment report.md --commit-sha ${{ steps.chatops.outputs.SHA }}
+          ${{steps.chatops.outputs.COMMAND}} > report.md
+          #printenv
+          echo ${{ steps.chatops.outputs.SHA }} >> report.md
+          echo $CI_PROJECT_PATH >> report.md
+          cat report.md
+          cml-send-comment --commit-sha ${{ steps.chatops.outputs.SHA }} report.md
+
