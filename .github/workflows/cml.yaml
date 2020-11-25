@@ -448,8 +448,9 @@ jobs:
         run: |
           dvc --version
           cd ..
-          git clone https://github.com/iterative/cml.git
           ls
+          ls /tmp
+
 
 
   # cml-tests:
