@@ -447,9 +447,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           dvc --version
-          cd ..
-          ls
-          ls /tmp
+          dvc get https://github.com/iterative/example-get-started model.pkl
 
 
 
