@@ -447,8 +447,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           dvc --version
-          git clone https://github.com/iterative/cml.git
           cd ..
+          git clone https://github.com/iterative/cml.git
           ls
 
 
