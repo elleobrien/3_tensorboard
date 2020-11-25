@@ -1,6 +1,6 @@
 name: train-my-model
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   # deploy-azure-gpu:
@@ -446,12 +446,9 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
-          dvc get https://github.com/iterative/example-get-started model.pkl
-          ls
-          git config user.name
-          git config user.email
-
-
+          # dvc get https://github.com/iterative/example-get-started model.pkl
+          # ls
+          git rev-parse HEAD
 
   # cml-tests:
   #   runs-on: [ubuntu-latest]
