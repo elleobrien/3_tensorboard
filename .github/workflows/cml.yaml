@@ -448,7 +448,8 @@ jobs:
         run: |
           dvc get https://github.com/iterative/example-get-started model.pkl
           ls
-          git config --list
+          git config user.name
+          git config user.email
 
 
 
