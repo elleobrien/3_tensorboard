@@ -447,6 +447,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           dvc --version
+          cd ..
+          ls
 
 
   # cml-tests:
