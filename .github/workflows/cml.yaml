@@ -448,6 +448,7 @@ jobs:
         run: |
           dvc --version
           dvc get https://github.com/iterative/example-get-started model.pkl
+          ls
 
 
 
